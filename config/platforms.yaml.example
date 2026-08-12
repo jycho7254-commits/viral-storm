@@ -1,0 +1,89 @@
+# Viral Storm — 설정 파일
+# 이 파일을 config/platforms.yaml로 복사하고 실제 값으로 채우세요
+
+# === X (트위터) ===
+# 신청: https://developer.x.com/
+# Free Tier: 월 1,500 tweets 무료
+twitter:
+  consumer_key: ""
+  consumer_secret: ""
+  access_token: ""
+  access_token_secret: ""
+  # 추가 계정 (계정 풀용)
+  accounts: []
+
+# === YouTube ===
+# 신청: https://console.cloud.google.com/
+# YouTube Data API v3 활성화, OAuth 2.0 클라이언트 생성
+youtube:
+  client_secrets_file: "config/youtube_client_secret.json"
+  # YouTube Shorts용 채널 (메인 + 서브)
+  channel_ids: []
+
+# === 네이버 ===
+# 신청: https://developers.naver.com/
+# 애플리케이션 등록 → API keys 발급
+naver:
+  client_id: ""
+  client_secret: ""
+  blog_id: ""          # 블로그 ID (URL의 blog.me 부분)
+  # 추가 블로그 계정들
+  additional_accounts: []
+
+# === DC 인사이드 ===
+# 공식 API 없음 — 계정 정보만 필요
+dc_inside:
+  accounts:
+    - username: ""
+      password: ""
+  # 타겟 갤러리 ID 목록 (게임별)
+  galleries:
+    game_general: "game_general"
+    mobile_game: "mobile"
+
+# === 아카라이브 ===
+# 공식 API 없음 — 소셜 로그인 계정
+arca_live:
+  accounts:
+    - email: ""
+      password: ""
+  # 타겟 게시판
+  boards:
+    game: "game"
+
+# === 캡차 서비스 ===
+# 2Captcha: https://2captcha.com/
+# 건당 ~$0.5~3, 리차지 방식
+captcha:
+  provider: "2captcha"
+  api_key: ""
+
+# === 프록시 ===
+# Residential Proxy 권장
+# 추천: Smartproxy, Bright Data, IPRoyal
+proxy:
+  enabled: false
+  provider: ""
+  api_key: ""
+  endpoint: ""
+
+# === AI 모델 ===
+ai:
+  # 메인: Z.AI GLM (기존 Hermes와 동일)
+  provider: "zai"
+  api_key: ""
+  model: "glm-5.2"
+  # 서브: OpenAI (선택사항)
+  openai_key: ""
+
+# === 스케줄러 ===
+scheduler:
+  posts_per_day: 5          # 하루 업로드 수
+  time_slots:               # 업로드 시간대
+    - "09:00"
+    - "10:30"
+    - "12:00"
+    - "19:00"
+    - "20:30"
+  random_delay_minutes: 15   # ±15분 랜덤 딜레이
+  platform_rotation: true    # 플랫폼 로테이션
