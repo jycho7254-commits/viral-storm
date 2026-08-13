@@ -54,11 +54,24 @@ AI 기반 게임 바이럴 마케팅 자동화 플랫폼. 자연스러운 글을
 pip install -r requirements.txt
 
 # 백엔드 실행
-uvicorn src.api.main:app --reload
+python src/api/main.py
+# 또는
+uvicorn src.api.main:app --reload --port 8000
 
-# 프론트엔드 실행
-cd src/web && npm run dev
+# 웹 대시보드
+# src/web/index.html을 브라우저로 열기 (API: localhost:8000)
 ```
+
+## 역할 분담
+
+| 프로필 | 역할 | 담당 |
+|--------|------|------|
+| **2호** | 개발 총괄 | 엔진, 백엔드, 프론트, 배포 |
+| **3호** | BM/전략 분석 | 타겟 분석, 경쟁작, 마케팅 전략, 페르소나 튜닝 |
+| **OMP** | 품질 검증 | 글 품질, AI 냄새 체크, 발행 전 검증 |
+| **명훈** | 최종 승인 | 캠페인 승인, 계정 관리, 방향 결정 |
+
+상세: [docs/ROLES.md](docs/ROLES.md) | 진행 상황: [TODO.md](TODO.md)
 
 ## 라이선스
 
