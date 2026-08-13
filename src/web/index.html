@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌩️ Viral Storm</title>
+<style>
+:root{
+  --bg:#0f1117; --surface:#1a1d27; --surface2:#222632; --border:#2a2e3a;
+  --text:#e4e6eb; --t2:#9ca3af; --t3:#6b7280;
+  --accent:#6366f1; --accent2:#818cf8;
+  --pos:#10b981; --neg:#ef4444; --warn:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+
+/* Header */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.header h1{font-size:24px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .status{display:flex;gap:8px}
+.status-badge{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.status-badge.ok{background:rgba(16,185,129,.15);color:var(--pos)}
+.status-badge.warn{background:rgba(245,158,11,.15);color:var(--warn)}
+.status-badge.err{background:rgba(239,68,68,.15);color:var(--neg)}
+
+/* Cards */
+.grid{display:grid;gap:16px;margin-bottom:24px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;transition:.15s}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:14px;color:var(--t2);margin-bottom:8px;font-weight:500}
+.card .value{font-size:32px;font-weight:700}
+.card .sub{font-size:13px;color:var(--t3);margin-top:4px}
+
+/* Form */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;color:var(--t2);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-size:14px;outline:none;transition:.15s
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group textarea{min-height:80px;resize:vertical;font-family:inherit}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checkbox-group{display:flex;gap:12px;flex-wrap:wrap}
+.checkbox-item{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px}
+.checkbox-item input{width:auto}
+.checkbox-item.active{border-color:var(--accent);background:rgba(99,102,241,.1)}
+
+/* Button */
+.btn{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:.15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent)}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--neg)}
+.btn-sm{padding:6px 12px;font-size:12px}
+
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;padding:10px 12px;color:var(--t2);font-weight:500;border-bottom:1px solid var(--border);font-size:13px}
+td{padding:10px 12px;border-bottom:1px solid var(--border)}
+tr:hover{background:var(--surface2)}
+
+/* Sections */
+.section{margin-bottom:32px}
+.section h2{font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.badge{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-pending{background:rgba(245,158,11,.15);color:var(--warn)}
+.badge-posted{background:rgba(16,185,129,.15);color:var(--pos)}
+
+/* Content preview */
+.content-preview{background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;line-height:1.6;max-height:200px;overflow-y:auto;white-space:pre-wrap;color:var(--t2)}
+.content-preview:hover{color:var(--text)}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:100}
+.modal-bg.on{display:flex}
+.modal{background:var(--surface);border-radius:12px;padding:24px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h2{margin-bottom:16px}
+.modal-close{float:right;cursor:pointer;font-size:20px;color:var(--t3)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:8px;font-size:14px;z-index:200;animation:slideUp .3s ease}
+.toast.ok{background:var(--pos);color:#fff}
+.toast.err{background:var(--neg);color:#fff}
+@keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+  <h1>🌩️ Viral Storm</h1>
+  <div class="status" id="platform-status"></div>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-4" id="stats-grid">
+  <div class="card"><h3>활성 캠페인</h3><div class="value" id="stat-campaigns">-</div></div>
+  <div class="card"><h3>생성된 글</h3><div class="value" id="stat-total">-</div></div>
+  <div class="card"><h3>발행 대기</h3><div class="value" id="stat-pending" style="color:var(--warn)">-</div></div>
+  <div class="card"><h3>발행 완료</h3><div class="value" id="stat-posted" style="color:var(--pos)">-</div></div>
+</div>
+
+<!-- New Campaign -->
+<div class="section">
+  <h2>🎯 새 캠페인</h2>
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label>게임명</label>
+        <input id="game-name" placeholder="예: 트릭컬 리바이브">
+      </div>
+      <div class="form-group">
+        <label>장르</label>
+        <input id="game-genre" placeholder="예: 서브컬처 RPG">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>플랫폼</label>
+        <select id="game-platform">
+          <option value="모바일 (iOS/Android)">모바일 (iOS/Android)</option>
+          <option value="PC (Steam)">PC (Steam)</option>
+          <option value="모바일 + PC">모바일 + PC</option>
+          <option value="콘솔">콘솔</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>연령등급</label>
+        <select id="game-age">
+          <option value="전체이용가">전체이용가</option>
+          <option value="12세 이용가">12세 이용가</option>
+          <option value="15세 이용가">15세 이용가</option>
+          <option value="18세 이용가">18세 이용가</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>게임 소개</label>
+      <textarea id="game-desc" placeholder="게임에 대한 간단한 소개"></textarea>
+    </div>
+    <div class="form-group">
+      <label>핵심 특징</label>
+      <input id="game-features" placeholder="예: 풀더빙, 한정캐 없음, 2주마다 업데이트">
+    </div>
+    <div class="form-group">
+      <label>경쟁작</label>
+      <input id="game-competitors" placeholder="예: 원신, 붕괴 스타레일">
+    </div>
+    <div class="form-group">
+      <label>대상 플랫폼</label>
+      <div class="checkbox-group" id="platform-checkboxes">
+        <label class="checkbox-item active"><input type="checkbox" value="blog" checked> 네이버 블로그</label>
+        <label class="checkbox-item active"><input type="checkbox" value="twitter" checked> X (트위터)</label>
+        <label class="checkbox-item active"><input type="checkbox" value="dc" checked> DC인사이드</label>
+        <label class="checkbox-item"><input type="checkbox" value="arca"> 아카라이브</label>
+        <label class="checkbox-item"><input type="checkbox" value="youtube"> YouTube Shorts</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>하루 포스팅 수</label>
+      <input id="posts-per-day" type="number" value="3" min="1" max="20" style="width:100px">
+    </div>
+    <button class="btn btn-primary" onclick="createCampaign()">캠페인 생성</button>
+  </div>
+</div>
+
+<!-- Campaign List -->
+<div class="section">
+  <h2>📋 캠페인 목록</h2>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>게임명</th><th>플랫폼</th><th>상태</th><th>생성 글</th><th>발행</th><th>작업</th></tr>
+      </thead>
+      <tbody id="campaign-list"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Pending Content -->
+<div class="section">
+  <h2>📝 발행 대기 콘텐츠</h2>
+  <div id="pending-list"></div>
+</div>
+
+</div>
+
+<!-- Content Modal -->
+<div class="modal-bg" id="content-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <span class="modal-close" onclick="closeModal()">✕</span>
+    <h2 id="modal-title"></h2>
+    <div class="content-preview" id="modal-content" style="margin:12px 0"></div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-primary btn-sm" id="modal-post-btn">발행하기</button>
+      <button class="btn btn-secondary btn-sm" onclick="closeModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='http://localhost:8000/api';
+
+async function api(path,opts){
+  try{
+    const r=await fetch(API+path,opts?{method:opts.method||'GET',headers:{'Content-Type':'application/json'},body:opts.body?JSON.stringify(opts.body):undefined}:undefined);
+    return await r.json();
+  }catch(e){console.error(e);return null}
+}
+
+// Stats
+async function loadStats(){
+  const data=await api('/campaigns');
+  if(!data||!data.campaigns)return;
+  const camps=data.campaigns;
+  document.getElementById('stat-campaigns').textContent=camps.filter(c=>c.status==='active').length;
+  const total=camps.reduce((s,c)=>s+(c.stats?.total||0),0);
+  const pending=camps.reduce((s,c)=>s+(c.stats?.pending||0),0);
+  const posted=camps.reduce((s,c)=>s+(c.stats?.posted||0),0);
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-pending').textContent=pending;
+  document.getElementById('stat-posted').textContent=posted;
+
+  // Campaign list
+  const list=document.getElementById('campaign-list');
+  if(!camps.length){list.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:20px">캠페인이 없습니다</td></tr>';return}
+  list.innerHTML=camps.map(c=>`<tr>
+    <td>${c.id}</td>
+    <td style="font-weight:600">${c.game_name}</td>
+    <td style="font-size:12px">${JSON.parse(c.platforms||'[]').join(', ')}</td>
+    <td><span class="badge ${c.status==='active'?'badge-posted':'badge-pending'}">${c.status}</span></td>
+    <td>${c.stats?.total||0}</td>
+    <td>${c.stats?.posted||0}</td>
+    <td>
+      <button class="btn btn-primary btn-sm" onclick="generateContent(${c.id})">글 생성</button>
+      <button class="btn btn-secondary btn-sm" onclick="viewCampaign(${c.id})">보기</button>
+    </td>
+  </tr>`).join('');
+}
+
+// Platform status
+async function loadPlatformStatus(){
+  const data=await api('/platforms/status');
+  if(!data)return;
+  const el=document.getElementById('platform-status');
+  el.innerHTML=Object.entries(data).map(([k,v])=>{
+    const cls=v.connected?'ok':'warn';
+    const label={twitter:'X',naver_blog:'Blog',dc_inside:'DC',arca_live:'Arca'}[k]||k;
+    return `<span class="status-badge ${cls}">${label}: ${v.status}</span>`;
+  }).join('');
+}
+
+// Create campaign
+async function createCampaign(){
+  const platforms=[];
+  document.querySelectorAll('#platform-checkboxes input:checked').forEach(c=>platforms.push(c.value));
+  const body={
+    game_name:document.getElementById('game-name').value,
+    game_info:{
+      name:document.getElementById('game-name').value,
+      genre:document.getElementById('game-genre').value,
+      platform:document.getElementById('game-platform').value,
+      age_rating:document.getElementById('game-age').value,
+      description:document.getElementById('game-desc').value,
+      features:document.getElementById('game-features').value,
+      competitors:document.getElementById('game-competitors').value
+    },
+    platforms:platforms,
+    posts_per_day:parseInt(document.getElementById('posts-per-day').value)
+  };
+  if(!body.game_name){toast('게임명 입력 필요','err');return}
+  const r=await api('/campaigns',{method:'POST',body});
+  if(r&&r.id){toast('캠페인 생성!','ok');loadStats()}
+  else toast('생성 실패','err');
+}
+
+// Generate content
+async function generateContent(campaignId){
+  toast('글 생성 중... (최대 30초)','ok');
+  const r=await api('/content/generate',{method:'POST',body:{campaign_id:campaignId,count:1}});
+  if(r){toast(`${r.generated}개 글 생성!`,'ok');loadStats();loadPending()}
+  else toast('생성 실패','err');
+}
+
+// Pending content
+async function loadPending(){
+  const data=await api('/content/pending?limit=5');
+  if(!data||!data.content||!data.content.length){
+    document.getElementById('pending-list').innerHTML='<div class="card" style="text-align:center;color:var(--t3)">대기 중인 콘텐츠가 없습니다</div>';
+    return;
+  }
+  document.getElementById('pending-list').innerHTML=data.content.map(c=>`
+    <div class="card" style="margin-bottom:8px;cursor:pointer" onclick="viewContent(${c.id})">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div><span class="badge badge-pending">${c.platform}</span> <span style="font-size:13px;color:var(--t2)">${c.persona}</span></div>
+        <span style="font-size:12px;color:var(--t3)">${c.created_at}</span>
+      </div>
+      <div class="content-preview">${(c.text||'').substring(0,150)}...</div>
+    </div>
+  `).join('');
+}
+
+// View content
+async function viewContent(id){
+  const c=await api('/content/'+id);
+  if(!c)return;
+  document.getElementById('modal-title').textContent=`${c.platform} — ${c.persona}`;
+  document.getElementById('modal-content').textContent=c.text;
+  document.getElementById('modal-post-btn').onclick=()=>postContent(id);
+  document.getElementById('content-modal').classList.add('on');
+}
+
+async function postContent(id){
+  const r=await api(`/content/${id}/post`,{method:'POST',body:{}});
+  if(r&&r.success)toast('발행 완료!','ok');
+  else toast(r?.message||'발행 실패','err');
+  closeModal();loadStats();loadPending();
+}
+
+function closeModal(){document.getElementById('content-modal').classList.remove('on')}
+
+function toast(msg,type){
+  const t=document.createElement('div');
+  t.className='toast '+(type||'ok');
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
+
+// Checkbox toggle
+document.querySelectorAll('#platform-checkboxes .checkbox-item').forEach(el=>{
+  el.addEventListener('click',function(){this.classList.toggle('active')});
+});
+
+// Init
+loadStats();loadPlatformStatus();loadPending();
+</script>
+</body>
+</html>
