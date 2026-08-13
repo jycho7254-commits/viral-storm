@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 CONFIG_DIR = os.path.join(BASE_DIR, 'config')
 
 # === AI 모델 설정 ===
-ZAI_API_KEY = os.environ.get('GLM_API_KEY', '')
+ZAI_API_KEY = os.environ.get('GLM_API_KEY', '11a4e2078eda4b91a39ae7c28e2d28bd.LTmBqMWJEy99yVVK')
 ZAI_BASE_URL = os.environ.get('GLM_BASE_URL', 'https://api.z.ai/api/coding/paas/v4')
 
 # === AI 냄새 제거용 후처리 ===
@@ -214,7 +214,8 @@ def generate_content(game_info, persona, platform='blog'):
     try:
         # 3회 생성 후 최고 품질 선택
         candidates = []
-        for attempt in range(3):
+        max_attempts = 3 if platform == 'blog' else 1  # 블로그만 3회, 나머지 1회
+        for attempt in range(max_attempts):
             raw = call_ai(user, system, temperature=0.8 + random.uniform(-0.1, 0.1))
             
             # AI 냄새 제거
