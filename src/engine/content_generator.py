@@ -148,7 +148,8 @@ def call_ai(prompt, system_prompt='', temperature=0.8, max_tokens=2000):
         'messages': messages,
         'temperature': temperature,
         'max_tokens': max_tokens,
-        'top_p': 0.9
+        'top_p': 0.9,
+        'thinking': {'type': 'disabled'}
     }).encode()
     
     url = ZAI_BASE_URL.rstrip('/') + '/chat/completions'
@@ -157,7 +158,7 @@ def call_ai(prompt, system_prompt='', temperature=0.8, max_tokens=2000):
         'Content-Type': 'application/json'
     })
     
-    resp = urllib.request.urlopen(req, timeout=60, context=ctx)
+    resp = urllib.request.urlopen(req, timeout=240, context=ctx)
     result = json.loads(resp.read())
     
     return result['choices'][0]['message']['content']
@@ -216,7 +217,7 @@ def generate_content(game_info, persona, platform='blog'):
         candidates = []
         max_attempts = 3 if platform == 'blog' else 1  # 블로그만 3회, 나머지 1회
         for attempt in range(max_attempts):
-            raw = call_ai(user, system, temperature=0.8 + random.uniform(-0.1, 0.1))
+            raw = call_ai(user, system, temperature=0.8 + random.uniform(-0.1, 0.1), max_tokens=8000)
             
             # AI 냄새 제거
             cleaned = remove_ai_smell(raw)
