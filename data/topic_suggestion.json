@@ -1,0 +1,69 @@
+{
+  "generated": "2026-08-15T22:33:11.024171",
+  "suggestions": [
+    {
+      "name": "Zenless Zone Zero - Anniv.",
+      "local_name": "젠레스 존 제로",
+      "developer": "COGNOSPHERE PTE. LTD.",
+      "app_id": "com.HoYoverse.Nap",
+      "rank": 22,
+      "rating": 3.3,
+      "news_7d": 6,
+      "score": 45,
+      "hooks": [
+        "최근 출시/이벤트 뉴스"
+      ],
+      "suggested_angle": "'Zenless Zone Zero - Anniv.' 요즘 이슈 — 출시/업데이트 직접 체험 후기"
+    },
+    {
+      "name": "리니지M",
+      "local_name": "리니지M",
+      "developer": "NC Corporation",
+      "app_id": "com.ncsoft.lineagem19",
+      "rank": 10,
+      "rating": 2.6,
+      "news_7d": 0,
+      "score": 42.2,
+      "hooks": [
+        "매출 10위인데 평점 2.6"
+      ],
+      "suggested_angle": "'리니지M' 매출 10위 vs 평점 2.6 — 왜 갈리는지 직접 해본 후기"
+    },
+    {
+      "name": "GODDESS OF VICTORY: NIKKE",
+      "local_name": "승리의 여신: 니케",
+      "developer": "Level Infinite",
+      "app_id": "com.proximabeta.nikke",
+      "rank": 5,
+      "rating": 4.8,
+      "news_7d": 2,
+      "score": 39.0,
+      "hooks": [],
+      "suggested_angle": "'GODDESS OF VICTORY: NIKKE' 5위 인기 게임 솔직 후기"
+    },
+    {
+      "name": "Whiteout Survival",
+      "local_name": "화이트아웃 서바이벌",
+      "developer": "Century Games PTE. LTD.",
+      "app_id": "com.gof.global",
+      "rank": 2,
+      "rating": 4.5,
+      "news_7d": 0,
+      "score": 33.2,
+      "hooks": [],
+      "suggested_angle": "'Whiteout Survival' 2위 인기 게임 솔직 후기"
+    },
+    {
+      "name": "MapleStory : Idle RPG",
+      "local_name": "메이플스토리 키우기",
+      "developer": "NEXON Company",
+      "app_id": "com.nexon.ma",
+      "rank": 4,
+      "rating": 4.5,
+      "news_7d": 0,
+      "score": 31.8,
+      "hooks": [],
+      "suggested_angle": "'MapleStory : Idle RPG' 4위 인기 게임 솔직 후기"
+    }
+  ]
+}
