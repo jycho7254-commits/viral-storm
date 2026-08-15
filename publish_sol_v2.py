@@ -16,9 +16,9 @@ IMAGES = [
 def open_editor(page, retries=3):
     """에디터 열기 — 로딩 실패 시 새로고침 재시도"""
     for i in range(retries):
-        page.goto(f'https://blog.naver.com/PostWriteForm.naver?blogId={BLOG_ID}', wait_until='domcontentloaded')
+        page.goto(f'https://blog.naver.com/PostWriteForm.naver?blogId={BLOG_ID}', wait_until='load')
         try:
-            page.locator('.se-title-text').first.wait_for(state='visible', timeout=100000)
+            page.locator('.se-title-text').first.wait_for(state='visible', timeout=60000)
             time.sleep(3)
             return True
         except Exception:
@@ -29,8 +29,13 @@ def open_editor(page, retries=3):
 def publish_with_images(title, body, image_paths):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
-        context = browser.new_context(storage_state=SESSION, user_agent='Mozilla/5.0', viewport={'width': 1280, 'height': 900})
+        # ⭐ localStorage 충돌 방지 — 쿠키만 주입하는 깨끗한 컨텍스트
+        import json as _json
+        session_data = _json.load(open(SESSION, encoding='utf-8'))
+        context = browser.new_context(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', viewport={'width': 1280, 'height': 900})
+        context.add_cookies(session_data['cookies'])
         page = context.new_page()
+        page.on('dialog', lambda d: d.accept())
 
         if not open_editor(page):
             page.screenshot(path=BASE + r'\editor_failed.png')
