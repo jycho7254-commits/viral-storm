@@ -164,6 +164,18 @@ def call_ai(prompt, system_prompt='', temperature=0.8, max_tokens=2000):
     return result['choices'][0]['message']['content']
 
 
+def strip_markdown(text):
+    """마크다운 문법 제거 — 네이버 에디터는 순수 텍스트만"""
+    import re as _re
+    text = _re.sub(r'\*\*(.+?)\*\*', r'\1', text)   # **볼드**
+    text = _re.sub(r'\*(.+?)\*', r'\1', text)        # *이탤릭*
+    text = _re.sub(r'^#{1,6}\s*', '', text, flags=_re.M)  # # 제목
+    text = _re.sub(r'^\s*[-*]\s+', '', text, flags=_re.M)  # - 목록
+    text = _re.sub(r'^\s*\d+\.\s+', '', text, flags=_re.M) # 1. 목록
+    text = _re.sub(r'~~(.+?)~~', r'\1', text)        # ~~취소선~~
+    text = _re.sub(r'`{1,3}(.+?)`{1,3}', r'\1', text) # `코드`
+    return text
+
 def load_style_samples():
     """실제 블로거 스타일 샘플 로드 (data/style_samples.json)"""
     path = os.path.join(DATA_DIR, 'style_samples.json') if 'DATA_DIR' in dir() else os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'style_samples.json')
@@ -199,7 +211,8 @@ def generate_content(game_info, persona, platform='blog'):
 4. "~습니다/입니다" 남용 금지 ("~했어요", "~더라고요", "~임" 혼용)
 5. 감정이 없는 객관적 서술 금지
 6. 같은 단어 반복 금지
-7. 개인적인 경험이나 느낌을 반드시 포함할 것"""
+7. 마크다운 문법 절대 금지 — **, ##, -, 1. 등 특수기호로 감싸거나 시작하지 마. 순수한 한국어 텍스트로만 써. 소제목도 그냥 한 줄 텍스트로.
+8. 개인적인 경험이나 느낌을 반드시 포함할 것"""
 
     # 검증된 사실 (game_research 모듈 결과) — 없으면 리서치 자동 실행
     facts_block = ''
@@ -261,6 +274,7 @@ def generate_content(game_info, persona, platform='blog'):
             
             # AI 냄새 제거
             cleaned = remove_ai_smell(raw)
+            cleaned = strip_markdown(cleaned)
             cleaned = add_human_imperfection(cleaned)
             
             # 품질 검증
