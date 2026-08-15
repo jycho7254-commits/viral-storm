@@ -164,6 +164,15 @@ def call_ai(prompt, system_prompt='', temperature=0.8, max_tokens=2000):
     return result['choices'][0]['message']['content']
 
 
+def load_style_samples():
+    """실제 블로거 스타일 샘플 로드 (data/style_samples.json)"""
+    path = os.path.join(DATA_DIR, 'style_samples.json') if 'DATA_DIR' in dir() else os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'style_samples.json')
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return []
+
 def generate_content(game_info, persona, platform='blog'):
     """게임 정보 + 페르소나로 콘텐츠 생성"""
     
@@ -192,6 +201,34 @@ def generate_content(game_info, persona, platform='blog'):
 6. 같은 단어 반복 금지
 7. 개인적인 경험이나 느낌을 반드시 포함할 것"""
 
+    # 검증된 사실 (game_research 모듈 결과) — 없으면 리서치 자동 실행
+    facts_block = ''
+    research = game_info.get('research')
+    if research and research.get('facts'):
+        facts_list = '\n'.join(f'- {f}' for f in research['facts'][:10])
+        facts_block = f"""
+【검증된 사실 — 이것만 사실로 사용 가능】
+{facts_list}
+
+⚠️ 절대 규칙: 위 사실 외에 게임의 구체적 콘텐츠(캐릭터명, 스킬, 시스템, 스토리)를 지어내지 마.
+모르는 내용은 "직접 확인해보라"는 식으로 넘겨. 허위 정보는 금지."""
+    else:
+        facts_block = """
+【주의】검증된 사실 없음 — 게임의 구체적 콘텐츠(캐릭터명, 스킬, 스토리, 시스템)를 지어내지 마.
+일반적인 MMORPG/게임 경험 수준에서만 쓰고, 구체적 정보는 언급하지 마."""
+
+    # 실제 블로그 스타일 샘플 (학습용)
+    style_block = ''
+    style_samples = game_info.get('style_samples') or load_style_samples()
+    if platform == 'blog' and style_samples:
+        sample = style_samples[0]  # 가장 대표 샘플 1개
+        style_block = f"""
+【실제 게임 블로거의 글 스타일 참고 (이 사람 스타일 흉내내기)】
+제목: {sample.get('title', '')}
+본문 일부:
+{sample.get('body', '')[:1200]}
+— 참고: 이 스타일(구성: 인사→게임 소개→실제 플레이 경험→솔직 장단점, 어조, 문단 길이)을 따라 하되 복사는 하지 마."""
+
     # 사용자 프롬프트
     user = f"""다음 게임에 대한 {cfg['format']}을 작성해.
 
@@ -202,6 +239,8 @@ def generate_content(game_info, persona, platform='blog'):
 소개: {game_info.get('description', '')}
 핵심 특징: {game_info.get('features', '')}
 경쟁작: {game_info.get('competitors', '')}
+{facts_block}
+{style_block}
 
 조건:
 - 글자 수: {cfg['min']}~{cfg['max']}자
@@ -209,6 +248,7 @@ def generate_content(game_info, persona, platform='blog'):
 - {'제목 포함 (호기심 유발)' if platform != 'twitter' else '해시태그 2~3개'}
 - {'장단점 솔직 평가 포함' if platform == 'blog' else ''}
 - {'댓글 유도 마무리' if platform in ['blog', 'dc', 'arca'] else ''}
+- 검증된 사실에 없는 구체적 콘텐츠(캐릭터명, 스킬명, 스토리) 절대 지어내지 말 것
 
 진짜 사람이 쓴 것처럼 자연스럽게 써. 게임을 실제로 해본 것처럼."""
 
