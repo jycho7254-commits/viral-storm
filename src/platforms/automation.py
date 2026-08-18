@@ -245,32 +245,40 @@ class NaverBlogAutomation:
 
 # === DC 인사이드 자동화 ===
 class DCAutomation:
-    """DC 인사이드 자동 포스팅"""
+    """DC 인사이드 자동 포스팅 — 프록시 지원 (IP 우회)"""
     
-    def __init__(self, session_file=None):
+    def __init__(self, session_file=None, proxy=None):
         self.session_file = session_file or os.path.join(SESSION_DIR, 'dc_session.json')
+        self.proxy = proxy  # 예: 'http://1.2.3.4:3128' 또는 'socks5://1.2.3.4:1080'
         self.browser = None
         self.context = None
         self.page = None
     
     def init_browser(self, headless=False):
         pw = sync_playwright().start()
+        launch_args = ['--disable-blink-features=AutomationControlled']
+        proxy_cfg = None
+        if self.proxy:
+            # socks5 프록시는 chromium 실행 인수로 전달
+            if self.proxy.startswith('socks5'):
+                host_port = self.proxy.replace('socks5://', '')
+                launch_args.append(f'--proxy-server=socks5://{host_port}')
+            else:
+                proxy_cfg = {'server': self.proxy}
         self.browser = pw.chromium.launch(
             headless=headless,
-            args=['--disable-blink-features=AutomationControlled']
+            args=launch_args,
+            proxy=proxy_cfg
         )
-        
-        if os.path.exists(self.session_file):
-            self.context = self.browser.new_context(
-                storage_state=self.session_file,
-                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                viewport={'width': 1280, 'height': 800}
-            )
-        else:
-            self.context = self.browser.new_context(
-                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                viewport={'width': 1280, 'height': 800}
-            )
+        # 프록시 실제 IP 확인용 페이지 (디버깅)
+        ctx_kwargs = dict(
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            viewport={'width': 1280, 'height': 800}
+        )
+        if os.path.exists(self.session_file) and not self.proxy:
+            # 신규 IP에서 기존 세션 재사용은 위험 — 프록시 모드에선 세션 미사용
+            ctx_kwargs['storage_state'] = self.session_file
+        self.context = self.browser.new_context(**ctx_kwargs)
         
         self.context.add_init_script("""
             Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
