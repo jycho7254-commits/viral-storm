@@ -186,7 +186,7 @@ def load_style_samples():
         return []
 
 def generate_content(game_info, persona, platform='blog'):
-    """게임 정보 + 페르소나로 콘텐츠 생성"""
+    """제품 정보 + 페르소나로 콘텐츠 생성 — 게임/패션/플랫폼/제품/매장 공용"""
     
     # 플랫폼별 길이 설정
     platform_config = {
@@ -223,7 +223,7 @@ def generate_content(game_info, persona, platform='blog'):
 【검증된 사실 — 이것만 사실로 사용 가능】
 {facts_list}
 
-⚠️ 절대 규칙: 위 사실 외에 게임의 구체적 콘텐츠(캐릭터명, 스킬, 시스템, 스토리)를 지어내지 마.
+⚠️ 절대 규칙: 위 사실 외에 제품의 구체적 세부(캐릭터명, 기능명, 사양, 스펙)를 지어내지 마.
 모르는 내용은 "직접 확인해보라"는 식으로 넘겨. 허위 정보는 금지."""
     else:
         facts_block = """
@@ -245,7 +245,7 @@ def generate_content(game_info, persona, platform='blog'):
     # 사용자 프롬프트
     user = f"""다음 게임에 대한 {cfg['format']}을 작성해.
 
-게임명: {game_info.get('name', '')}
+대상명: {game_info.get('name', '')}
 장르: {game_info.get('genre', '')}
 플랫폼: {game_info.get('platform', '')}
 연령등급: {game_info.get('age_rating', '')}
@@ -263,7 +263,7 @@ def generate_content(game_info, persona, platform='blog'):
 - {'댓글 유도 마무리' if platform in ['blog', 'dc', 'arca'] else ''}
 - 검증된 사실에 없는 구체적 콘텐츠(캐릭터명, 스킬명, 스토리) 절대 지어내지 말 것
 
-진짜 사람이 쓴 것처럼 자연스럽게 써. 게임을 실제로 해본 것처럼."""
+진짜 사람이 쓴 것처럼 자연스럽게 써. 실제로 써보고/입어보고/해본 사람처럼."""
 
     try:
         # 3회 생성 후 최고 품질 선택

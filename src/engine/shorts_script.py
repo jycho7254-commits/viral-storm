@@ -37,12 +37,22 @@ def parse_script(raw: str, max_lines: int = 6) -> list:
 
 
 def generate_shorts_script(game_info: dict, persona: dict, angle: str = None) -> dict:
-    """숏츠 나레이션 스크립트 생성 — 문장 리스트 반환"""
+    """숏츠 나레이션 스크립트 생성 — 문장 리스트 반환
+    게임/제품(패션/플랫폼/제품/매장) 공용 — category로 어휘 전환"""
     facts = (game_info.get("research") or {}).get("facts") or []
-    facts_block = "\n".join(f"- {f}" for f in facts[:8]) if facts else "- (일반 게임 경험만 사용)"
+    facts_block = "\n".join(f"- {f}" for f in facts[:8]) if facts else "- (일반 경험만 사용)"
+
+    category = (game_info.get("research") or {}).get("category") or game_info.get("category") or "game"
+    CTX = {
+        "game": {"subject": "게임", "appeal": "이 게임의 진짜 재미", "cta": "직접 깔아서 확인해보세요"},
+        "fashion": {"subject": "브랜드/제품", "appeal": "이 제품의 진짜 매력(핏/퀄/가성비)", "cta": "직접 입어보고 판단하세요"},
+        "platform": {"subject": "서비스/사이트", "appeal": "이 서비스가 편한 이유", "cta": "들어가서 직접 써보세요"},
+        "product": {"subject": "제품", "appeal": "이 제품의 진짜 성능/가성비", "cta": "직접 써보고 판단하세요"},
+        "place": {"subject": "매장/장소", "appeal": "이 곳의 진짜 분위기/맛", "cta": "직접 가보고 판단하세요"},
+    }[category if category in ("game", "fashion", "platform", "product", "place") else "game"]
 
     system = f"""너는 {persona['name']}이야. {persona['description']}
-유튜브 숏츠 나레이션 스크립트를 써. 실제 게이머가 말하는 톤.
+유튜브 숏츠 나레이션 스크립트를 써. 실제 사용자가 말하는 톤.
 
 절대 규칙:
 1. 한 줄이 한 자막 — 문장 하나씩 줄바꿈으로 구분
@@ -50,11 +60,11 @@ def generate_shorts_script(game_info: dict, persona: dict, angle: str = None) ->
 3. 마크다운/이모지/특수기호 금지 — 순수 텍스트만
 4. 문장 길이 15~40자 (짧게 숨 쉬듯이)
 5. AI 느낌 나는 단어 금지 (혁신적, 최적화, ~습니다)
-6. 마지막 문장은 CTA (해보라, 댓글 유도)
+6. 마지막 문장은 CTA
 """
 
-    user = f"""게임: {game_info.get('name', '')}
-장르: {game_info.get('genre', '')}
+    user = f"""대상: {game_info.get('name', '')} ({CTX['subject']})
+장르/유형: {game_info.get('genre', '') or category}
 
 검증된 사실:
 {facts_block}
@@ -64,10 +74,18 @@ def generate_shorts_script(game_info: dict, persona: dict, angle: str = None) ->
 6개 문장으로 숏츠 대본을 써줘. 구조:
 1번: 후킹 (질문이나 충격 고백)
 2~3번: 실제 경험 디테일
-4~5번: 이 게임의 진짜 매력
-6번: CTA
+4~5번: {CTX['appeal']}
+6번: CTA (예: {CTX['cta']})
 
 각 문장을 한 줄씩, 번호 없이."""
+
+    # 바이럴 패턴 지식베이스 주입 (10,074건 학습)
+    try:
+        from src.engine.viral_patterns import apply_patterns
+        pattern_hint = apply_patterns("youtube", category)
+        user = pattern_hint + "\n\n" + user
+    except Exception:
+        pass
 
     raw = call_ai(user, system, temperature=0.85, max_tokens=3000)
     lines = parse_script(raw, max_lines=6)

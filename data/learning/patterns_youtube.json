@@ -1,0 +1,663 @@
+{
+  "meta": {
+    "generated": "2026-08-19",
+    "source_corpus": "corpus_youtube.json",
+    "source_supplement": "learning_summary.json#yt_top50",
+    "corpus_size_raw": 240,
+    "corpus_size_dedup": 237,
+    "views_range": [
+      2,
+      3879622
+    ],
+    "top_vs_bottom_quartile_flags": {
+      "first_person": {
+        "top_share": 0.034,
+        "bottom_share": 0.0,
+        "avg_views_when_present": 797010,
+        "count": 6
+      },
+      "experience_verb": {
+        "top_share": 0.068,
+        "bottom_share": 0.051,
+        "avg_views_when_present": 652053,
+        "count": 9
+      },
+      "ad_ref": {
+        "top_share": 0.051,
+        "bottom_share": 0.085,
+        "avg_views_when_present": 291309,
+        "count": 14
+      },
+      "question": {
+        "top_share": 0.119,
+        "bottom_share": 0.119,
+        "avg_views_when_present": 339187,
+        "count": 26
+      },
+      "vs": {
+        "top_share": 0.034,
+        "bottom_share": 0.0,
+        "avg_views_when_present": 680808,
+        "count": 5
+      },
+      "has_digit": {
+        "top_share": 0.407,
+        "bottom_share": 0.441,
+        "avg_views_when_present": 246709,
+        "count": 111
+      },
+      "slang": {
+        "top_share": 0.169,
+        "bottom_share": 0.051,
+        "avg_views_when_present": 571031,
+        "count": 20
+      },
+      "neg_emotion": {
+        "top_share": 0.136,
+        "bottom_share": 0.0,
+        "avg_views_when_present": 1078604,
+        "count": 8
+      },
+      "superlative": {
+        "top_share": 0.102,
+        "bottom_share": 0.068,
+        "avg_views_when_present": 379575,
+        "count": 16
+      },
+      "is_korean": {
+        "top_share": 0.678,
+        "bottom_share": 0.746,
+        "avg_views_when_present": 301362,
+        "count": 159
+      }
+    },
+    "title_len": {
+      "top25_avg": 47.7,
+      "bottom25_avg": 52.0,
+      "overall_avg": 52.2
+    },
+    "experience_hook": {
+      "share_in_corpus": 0.059,
+      "avg_views": 611260,
+      "lift_vs_overall": 1.93
+    }
+  },
+  "title_formulas": [
+    {
+      "id": "F1",
+      "name": "광고분노 → 직접 체험형",
+      "template": "광고에 ㅈㄴ 뜨던 {대상}, 개빡쳐서 {행동}봤습니다",
+      "mechanism": "광고 과노출로 공감된 불만을 행동(직접 해보기)으로 전환. 분노+체험 2단 후킹. 신뢰성(광고 아님)과 호기심(결과 궁금) 동시 충족",
+      "best_for": [
+        "game",
+        "product"
+      ],
+      "evidence": {
+        "example": "광고에 ㅈㄴ 뜨던 게임, 개빡쳐서 깔아봤습니다",
+        "views": 2492598,
+        "search_query": "모바일 게임 리뷰"
+      }
+    },
+    {
+      "id": "F2",
+      "name": "직접 검증형 (A vs B)",
+      "template": "{A} vs {B}, 직접 {행동}봤습니다! 과연 {의문}?",
+      "mechanism": "vs 구조로 비교 호기심 + 직접 체험으로 신뢰 + 마지막 의문문으로 클릭 유도",
+      "best_for": [
+        "product",
+        "game"
+      ],
+      "evidence": {
+        "example": "현지 정품 vs 면세점 마오타이, 직접 마셔 봤습니다! 과연 면세점은 정품일까?",
+        "views": 2092903,
+        "search_query": "정품 리뷰"
+      }
+    },
+    {
+      "id": "F3",
+      "name": "구체적 금액 + 의문형",
+      "template": "{금액}짜리 {대상}.. 이게 맞나요?",
+      "mechanism": "숫자의 구체성이 진정성을 만들고, 의문문 반박이 궁금증 유발",
+      "best_for": [
+        "etc_experience",
+        "product"
+      ],
+      "evidence": {
+        "example": "100만원짜리 일본 패키지 여행.. 이게 맞나요?",
+        "views": 1786561,
+        "search_query": "여행 후기"
+      }
+    },
+    {
+      "id": "F4",
+      "name": "감탄 슬랭 오프닝형",
+      "template": "소재 미쳤다... / ㄹㅇ 개 {수식어} {대상}",
+      "mechanism": "초반 3초에 감정 단어(미쳤다/ㄹㅇ/개) 배치. 신세대 인터넷 언어로 거리감 제거",
+      "best_for": [
+        "game",
+        "site"
+      ],
+      "evidence": {
+        "example": "ㄹㅇ 개 쓸데없는 사이트 모음",
+        "views": 1387913,
+        "search_query": "유용한 사이트"
+      }
+    },
+    {
+      "id": "F5",
+      "name": "숨은 꿀정보형",
+      "template": "{타깃}이 은근히 모르는 개꿀 {대상}",
+      "mechanism": "'은근히 모르는'으로 정보 우월감 + 타깃 명시로 해당 시청자의 자기 식별 유도",
+      "best_for": [
+        "site",
+        "product"
+      ],
+      "evidence": {
+        "example": "대학생들이 은근히 모르는 과제 개꿀 사이트  | 연고티비",
+        "views": 754755,
+        "search_query": "유용한 사이트"
+      }
+    },
+    {
+      "id": "F6",
+      "name": "장기 대량 검증 → 축약형",
+      "template": "{기간} 동안 {경험한 N}개 중 베스트 {M}",
+      "mechanism": "장기간+대량(N)이 노력의 증거, 좁힌 숫자(M)가 결과의 확신. N→M 축소 구조가 '엄선' 느낌",
+      "best_for": [
+        "etc_experience",
+        "product",
+        "clothing"
+      ],
+      "evidence": {
+        "example": "2년 동안 가봤던 서울 맛집 107곳 중 베스트 11",
+        "views": 592891,
+        "search_query": "맛집 추천"
+      }
+    },
+    {
+      "id": "F7",
+      "name": "전문가/내부자 입장형",
+      "template": "{전문가/내부자}가 {행동}하는 {대상}",
+      "mechanism": "내부자 시점이 희소성과 신뢰를 동시에 제공 (스타일리스트/회사 직원/대표)",
+      "best_for": [
+        "clothing",
+        "product"
+      ],
+      "evidence": {
+        "example": "10분만에 스타일리스트가 '패션꼼수' 예쁘게 입는 법 알려드릴게요. [현실 꿀팁 총정리]",
+        "views": 1150591,
+        "search_query": "코디 팁"
+      }
+    },
+    {
+      "id": "F8",
+      "name": "광고 아님 표방형",
+      "template": "(광고❌) 써본 중에 최고! / {대상} Haul & Review (Not an Ad)",
+      "mechanism": "광고 혐오 시대, '광고 아님'을 명시하는 것 자체가 역설적 훅. 찐 후기 포지셔닝",
+      "best_for": [
+        "product",
+        "game"
+      ],
+      "evidence": {
+        "example": "Temu Haul & Unboxing Review(Not an Ad)",
+        "views": 3103358,
+        "search_query": "제품 리뷰 언박싱"
+      }
+    },
+    {
+      "id": "F9",
+      "name": "사건 서사형 ('~하다 생긴 일')",
+      "template": "{행동}하다 {예상치 못한 결과가} 생긴 일",
+      "mechanism": "서사 기대감: 평범한 행동 뒤 예상 밖 사건을 암시해 결말 궁금증 유발",
+      "best_for": [
+        "product",
+        "etc_experience"
+      ],
+      "evidence": {
+        "example": "얼죽아 필수품 스탠리 텀블러. 싸게 사려다가 돈만 날린다?! 정품 vs 짝퉁 비교하다 생긴일.",
+        "views": 1119418,
+        "search_query": "정품 리뷰"
+      }
+    },
+    {
+      "id": "F10",
+      "name": "인생 보증형 + 숫자 리스트",
+      "template": "죽기 전에 꼭 {행동}할 인생{대상} 베스트 {N}",
+      "mechanism": "'인생' 수식어가 강도를 극대화하고 리스트 숫자가 정보량을 약속",
+      "best_for": [
+        "etc_experience",
+        "product"
+      ],
+      "evidence": {
+        "example": "죽기 전에 꼭 가봐야 할 인생맛집 베스트 38",
+        "views": 908214,
+        "search_query": "맛집 추천"
+      }
+    },
+    {
+      "id": "F11",
+      "name": "공감 반전 꿀팁형",
+      "template": "{공감되는 고민} 있을때 {현실 꿀팁}",
+      "mechanism": "누구나 공감하는 고민 제시 → 현실적 해법 제시. 공감이 클릭을 만듦",
+      "best_for": [
+        "game",
+        "clothing"
+      ],
+      "evidence": {
+        "example": "새학기 학교 가기 싫을때 안 가는 꿀팁?ㅋㅋㅋㅋ",
+        "views": 1032979,
+        "search_query": "이 게임 꿀팁"
+      }
+    },
+    {
+      "id": "F12",
+      "name": "기간 후기 디테일형",
+      "template": "{N}일/년 후기 — 여기서 갈립니다",
+      "mechanism": "구체적 기간이 신뢰를, '갈린다'는 분기 판정 욕구를 자극",
+      "best_for": [
+        "site",
+        "game"
+      ],
+      "evidence": {
+        "example": "요즘 쇼츠는 여기서 갈립니다 (150일 후기)",
+        "views": 32348,
+        "search_query": "게임 추천 숏츠"
+      }
+    }
+  ],
+  "by_category": {
+    "game": {
+      "label": "게임",
+      "stats": {
+        "sample": 51,
+        "avg_views": 344794,
+        "median_views": 113281,
+        "avg_title_len": 46.3
+      },
+      "dominant_hooks": {
+        "has_digit": 0.471,
+        "is_korean": 0.647
+      },
+      "top_titles": [
+        {
+          "title": "광고에 ㅈㄴ 뜨던 게임, 개빡쳐서 깔아봤습니다",
+          "views": 2492598,
+          "query": "모바일 게임 리뷰"
+        },
+        {
+          "title": "[SOL: enchant]「신의 거부」현빈 편",
+          "views": 2289978,
+          "query": "게임 광고"
+        },
+        {
+          "title": "Aoni's Vlog of Going to Buy a New Nintendo Alone★ (feat. Third Island)",
+          "views": 1843928,
+          "query": "게임 후기 브이로그"
+        }
+      ],
+      "recommended_formulas": [
+        "F1 광고분노 → 직접 체험형",
+        "F2 직접 검증형 (A vs B)",
+        "F4 감탄 슬랭 오프닝형",
+        "F8 광고 아님 표방형",
+        "F11 공감 반전 꿀팁형",
+        "F12 기간 후기 디테일형"
+      ]
+    },
+    "clothing": {
+      "label": "옷/패션",
+      "stats": {
+        "sample": 49,
+        "avg_views": 245513,
+        "median_views": 93565,
+        "avg_title_len": 55.0
+      },
+      "dominant_hooks": {
+        "question": 0.184,
+        "has_digit": 0.449,
+        "is_korean": 0.694
+      },
+      "top_titles": [
+        {
+          "title": "[뮤뱅 원테이크 4K] 코르티스(CORTIS) 'FaSHioN' 4K Bonus Ver. @뮤직뱅크(Music Bank) 250912",
+          "views": 2685275,
+          "query": "OOTD 한국"
+        },
+        {
+          "title": "🛫침착한 여행 D-1ㅣ짐싸기,공항패션,브이로그",
+          "views": 1484974,
+          "query": "옷 추천 브이로그"
+        },
+        {
+          "title": "10분만에 스타일리스트가 '패션꼼수' 예쁘게 입는 법 알려드릴게요. [현실 꿀팁 총정리]",
+          "views": 1150591,
+          "query": "코디 팁"
+        }
+      ],
+      "recommended_formulas": [
+        "F6 장기 대량 검증 → 축약형",
+        "F7 전문가/내부자 입장형",
+        "F11 공감 반전 꿀팁형"
+      ]
+    },
+    "site": {
+      "label": "사이트/앱",
+      "stats": {
+        "sample": 31,
+        "avg_views": 150773,
+        "median_views": 23738,
+        "avg_title_len": 49.3
+      },
+      "dominant_hooks": {
+        "has_digit": 0.516,
+        "is_korean": 0.742
+      },
+      "top_titles": [
+        {
+          "title": "ㄹㅇ 개 쓸데없는 사이트 모음",
+          "views": 1387913,
+          "query": "유용한 사이트"
+        },
+        {
+          "title": "검색할 수 없는 사이트 딥웹에 대해 알아보자",
+          "views": 837975,
+          "query": "유용한 사이트"
+        },
+        {
+          "title": "대학생들이 은근히 모르는 과제 개꿀 사이트  | 연고티비",
+          "views": 754755,
+          "query": "유용한 사이트"
+        }
+      ],
+      "recommended_formulas": [
+        "F4 감탄 슬랭 오프닝형",
+        "F5 숨은 꿀정보형",
+        "F12 기간 후기 디테일형"
+      ]
+    },
+    "product": {
+      "label": "제품",
+      "stats": {
+        "sample": 48,
+        "avg_views": 236647,
+        "median_views": 93907,
+        "avg_title_len": 66.5
+      },
+      "dominant_hooks": {
+        "has_digit": 0.583,
+        "is_korean": 0.583
+      },
+      "top_titles": [
+        {
+          "title": "Temu Haul & Unboxing Review(Not an Ad)",
+          "views": 3103358,
+          "query": "제품 리뷰 언박싱"
+        },
+        {
+          "title": "얼죽아 필수품 스탠리 텀블러. 싸게 사려다가 돈만 날린다?! 정품 vs 짝퉁 비교하다 생긴일.",
+          "views": 1119418,
+          "query": "정품 리뷰"
+        },
+        {
+          "title": "7 Life-Enhancing Items - Cost-Effective Electronics & Home Goods",
+          "views": 908015,
+          "query": "인생템 추천"
+        }
+      ],
+      "recommended_formulas": [
+        "F1 광고분노 → 직접 체험형",
+        "F2 직접 검증형 (A vs B)",
+        "F3 구체적 금액 + 의문형",
+        "F5 숨은 꿀정보형",
+        "F6 장기 대량 검증 → 축약형",
+        "F7 전문가/내부자 입장형",
+        "F8 광고 아님 표방형",
+        "F9 사건 서사형 ('~하다 생긴 일')",
+        "F10 인생 보증형 + 숫자 리스트"
+      ]
+    },
+    "etc_experience": {
+      "label": "기타(여행/맛집/영화/서비스)",
+      "stats": {
+        "sample": 58,
+        "avg_views": 507794,
+        "median_views": 57070,
+        "avg_title_len": 45.0
+      },
+      "dominant_hooks": {
+        "has_digit": 0.362,
+        "is_korean": 0.707
+      },
+      "top_titles": [
+        {
+          "title": "Travel YouTubers Rank Countries They Want to Visit (with Pani Bottle & Kwaktube)",
+          "views": 3879622,
+          "query": "여행 후기"
+        },
+        {
+          "title": "이 영화를 보고 암을 치료했습니다! [리얼]",
+          "views": 2880656,
+          "query": "리얼 리뷰"
+        },
+        {
+          "title": "[Movie Masterpiece Selection] Episode 25 - Real",
+          "views": 2444848,
+          "query": "리얼 리뷰"
+        }
+      ],
+      "recommended_formulas": [
+        "F3 구체적 금액 + 의문형",
+        "F6 장기 대량 검증 → 축약형",
+        "F9 사건 서사형 ('~하다 생긴 일')",
+        "F10 인생 보증형 + 숫자 리스트"
+      ]
+    }
+  },
+  "hook_words": [
+    {
+      "word": "광고에 뜨던/광고에 ㅈㄴ 뜨던",
+      "role": "광고 과노출 공감 → 체험 전환 도입부",
+      "evidence": {
+        "example": "광고에 ㅈㄴ 뜨던 게임, 개빡쳐서 깔아봤습니다",
+        "views": 2492598,
+        "search_query": "모바일 게임 리뷰"
+      },
+      "corpus_count": 14,
+      "avg_views": 291309
+    },
+    {
+      "word": "직접",
+      "role": "검증자가 본인임을 표시 — 신뢰 코어",
+      "corpus_count": 2,
+      "avg_views": 1080401
+    },
+    {
+      "word": "~해봤습니다/깔아봤습니다/마셔봤습니다",
+      "role": "체험 완료형 종결 — 결과 궁금증"
+    },
+    {
+      "word": "ㄹㅇ / ㅈㄴ / 개",
+      "role": "신세대 강조 접두어 — 진정성 톤"
+    },
+    {
+      "word": "개빡쳐서/개꿀/개쓸데없는",
+      "role": "감정 강도 부사"
+    },
+    {
+      "word": "은근히 모르는",
+      "role": "정보 우월감 유발"
+    },
+    {
+      "word": "베스트 N / N곳 중 M",
+      "role": "숫자 축소로 엄선 느낌",
+      "corpus_count": 5,
+      "avg_views": 371301
+    },
+    {
+      "word": "vs / 비교",
+      "role": "대결 구조 호기심",
+      "corpus_count": 4,
+      "avg_views": 834092
+    },
+    {
+      "word": "이게 맞나요? / 과연 ~일까?",
+      "role": "의문 종결 — 클릭 버튼"
+    },
+    {
+      "word": "인생맛집/인생템/꿀팁",
+      "role": "보증 수식어",
+      "corpus_count": 7,
+      "avg_views": 279288
+    },
+    {
+      "word": "미쳤다/소름",
+      "role": "감탄 반응 오프닝"
+    },
+    {
+      "word": "생긴 일",
+      "role": "사건 예고 종결"
+    }
+  ],
+  "hook_word_lifts": [
+    {
+      "word": "봤습니다",
+      "count": 2,
+      "avg_views": 2292750,
+      "lift_vs_overall": 7.24
+    },
+    {
+      "word": "직접",
+      "count": 2,
+      "avg_views": 1080401,
+      "lift_vs_overall": 3.41
+    },
+    {
+      "word": "vs",
+      "count": 4,
+      "avg_views": 834092,
+      "lift_vs_overall": 2.63
+    },
+    {
+      "word": "최고",
+      "count": 3,
+      "avg_views": 716250,
+      "lift_vs_overall": 2.26
+    },
+    {
+      "word": "정품",
+      "count": 6,
+      "avg_views": 603788,
+      "lift_vs_overall": 1.91
+    },
+    {
+      "word": "비교",
+      "count": 2,
+      "avg_views": 593546,
+      "lift_vs_overall": 1.87
+    },
+    {
+      "word": "꿀팁",
+      "count": 8,
+      "avg_views": 387070,
+      "lift_vs_overall": 1.22
+    },
+    {
+      "word": "모르는",
+      "count": 2,
+      "avg_views": 378178,
+      "lift_vs_overall": 1.19
+    },
+    {
+      "word": "베스트",
+      "count": 5,
+      "avg_views": 371301,
+      "lift_vs_overall": 1.17
+    },
+    {
+      "word": "후기",
+      "count": 12,
+      "avg_views": 366466,
+      "lift_vs_overall": 1.16
+    },
+    {
+      "word": "광고",
+      "count": 14,
+      "avg_views": 291309,
+      "lift_vs_overall": 0.92
+    },
+    {
+      "word": "리뷰",
+      "count": 8,
+      "avg_views": 292421,
+      "lift_vs_overall": 0.92
+    },
+    {
+      "word": "꿀",
+      "count": 14,
+      "avg_views": 283463,
+      "lift_vs_overall": 0.89
+    },
+    {
+      "word": "인생",
+      "count": 7,
+      "avg_views": 279288,
+      "lift_vs_overall": 0.88
+    },
+    {
+      "word": "쇼츠",
+      "count": 5,
+      "avg_views": 239917,
+      "lift_vs_overall": 0.76
+    },
+    {
+      "word": "총정리",
+      "count": 8,
+      "avg_views": 196676,
+      "lift_vs_overall": 0.62
+    },
+    {
+      "word": "언박싱",
+      "count": 3,
+      "avg_views": 191847,
+      "lift_vs_overall": 0.61
+    },
+    {
+      "word": "추천",
+      "count": 36,
+      "avg_views": 65115,
+      "lift_vs_overall": 0.21
+    }
+  ],
+  "anti_patterns": [
+    {
+      "pattern": "한국 타깃 검색쿼리에 영어 제목",
+      "evidence": "한글 제목 평균 301,362 vs 비한글 제목 평균 348,502",
+      "why": "영어 제목은 한국 로컬 검색/추천 노출에서 소통 실패. 글로벌 채널이 아닌 이상 국문 필수"
+    },
+    {
+      "pattern": "후킹 없는 일반 명사형 제목 ('~추천', '~리뷰'만 붙임)",
+      "evidence": "하위 25%에서 체험동사 비중 5% · 상위 25%는 7%",
+      "why": "정보만 있고 사람(경험)이 없으면 클릭할 이유가 없음. 반드시 체험/감정/의문 중 1개 추가"
+    },
+    {
+      "pattern": "공식 브랜드필름/기업 홍보형 제목 ([Official], 브랜드명 선행)",
+      "evidence": "예: [Official] 브랜드필름 — 채널 파워 없으면 개인 채널 대비 노출 열위",
+      "why": "광고로 인식되는 순간 스킵. 개인/체험 시점으로 재포장해야 함"
+    },
+    {
+      "pattern": "과도하게 긴 제목 (한 줄 넘김)",
+      "evidence": "상위 25% 평균 48자 vs 하위 25% 평균 52자",
+      "why": "모바일/쇼츠 피드에서 잘리는 제목은 후킹 손실. 핵심 훅 앞쪽 배치"
+    },
+    {
+      "pattern": "3자 시점 정보 전달형 (1인칭 부재)",
+      "evidence": "상위 25% 1인칭/체험 비중 3% vs 하위 25% 0%",
+      "why": "유튜브는 1인칭 미디어. 뉴스형 중립 서술은 클릭률 낮음"
+    },
+    {
+      "pattern": "결과를 다 말해주는 제목",
+      "evidence": "상위 제목들은 '이게 맞나요?'/'과연 ~일까?'처럼 결과를 물음으로 남김",
+      "why": "결론이 제목에 있으면 볼 이유가 사라짐. 궁금증은 미해결 상태로"
+    }
+  ]
+}
