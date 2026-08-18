@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viral Storm — 종합 바이럴 운영</title>
+<style>
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1c2128;--border:#30363d;
+  --t1:#e6edf3;--t2:#8b949e;--t3:#6e7681;
+  --accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t1);font-family:'Pretendard',-apple-system,'Segoe UI',sans-serif;font-size:15px}
+a{color:var(--accent);text-decoration:none}
+.container{max-width:1280px;margin:0 auto;padding:0 16px}
+
+/* topbar */
+.topbar{border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:50}
+.topbar-inner{display:flex;align-items:center;gap:14px;height:56px}
+.logo{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.tabs{display:flex;gap:2px;margin-left:12px;overflow-x:auto}
+.tabs button{background:none;border:none;color:var(--t2);font-size:15px;font-weight:600;padding:8px 14px;cursor:pointer;border-radius:8px;white-space:nowrap}
+.tabs button.on{color:var(--t1);background:var(--surface2)}
+.tabs button:hover{color:var(--t1)}
+.spacer{flex:1}
+.pill{font-size:13px;color:var(--t2);background:var(--surface2);padding:4px 10px;border-radius:99px;border:1px solid var(--border)}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+.card h3{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* kpi */
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.kpi .label{font-size:13px;color:var(--t2)}
+.kpi .value{font-size:28px;font-weight:800;margin-top:4px}
+.kpi .sub{font-size:12px;color:var(--t3);margin-top:2px}
+.kpi.accent .value{color:var(--accent)}
+.kpi.green .value{color:var(--green)}
+.kpi.purple .value{color:var(--purple)}
+.kpi.yellow .value{color:var(--yellow)}
+
+/* form */
+label{display:block;font-size:13px;color:var(--t2);margin:10px 0 5px;font-weight:600}
+input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--t1);padding:10px 12px;font-size:15px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{min-height:80px;resize:vertical}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:15px;font-weight:700;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:var(--surface2);color:var(--t1);border:1px solid var(--border)}
+.btn.green{background:var(--green)}
+.btn.small{padding:6px 12px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:7px 14px;font-size:14px;cursor:pointer;color:var(--t2)}
+.chip.on{background:rgba(88,166,255,.15);border-color:var(--accent);color:var(--accent);font-weight:700}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--t2);font-size:13px;padding:8px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{font-size:12px;padding:2px 8px;border-radius:99px;font-weight:700}
+.badge.active{background:rgba(63,185,80,.15);color:var(--green)}
+.badge.pending{background:rgba(210,153,34,.15);color:var(--yellow)}
+.badge.posted{background:rgba(88,166,255,.15);color:var(--accent)}
+.badge.rendered{background:rgba(188,140,255,.15);color:var(--purple)}
+.badge.failed{background:rgba(248,81,73,.15);color:var(--red)}
+
+/* toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;z-index:100;display:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#toast.err{border-color:var(--red)}
+
+/* modal */
+#modalBg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;display:none;align-items:center;justify-content:center;padding:16px}
+#modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:760px;width:100%;max-height:85vh;overflow-y:auto;padding:22px}
+.mrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+video{width:100%;max-height:420px;border-radius:10px;background:#000;margin-top:10px}
+
+.section-title{font-size:13px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px}
+.empty{color:var(--t3);text-align:center;padding:40px 0;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <div class="logo">🌩️ Viral Storm</div>
+    <div class="tabs">
+      <button class="on" data-tab="dashboard" onclick="showTab('dashboard')">대시보드</button>
+      <button data-tab="campaigns" onclick="showTab('campaigns')">캠페인</button>
+      <button data-tab="create" onclick="showTab('create')">새 캠페인</button>
+      <button data-tab="metrics" onclick="showTab('metrics')">바이럴 지표</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="pill" id="enginePill">엔진 확인 중</div>
+  </div>
+</div>
+
+<div class="container" style="padding:16px">
+
+<!-- ══════════ 대시보드 ══════════ -->
+<div class="tab" id="tab-dashboard">
+  <div class="grid g4" style="margin-bottom:14px">
+    <div class="kpi accent"><div class="label">진행 캠페인</div><div class="value" id="kCamp">0</div></div>
+    <div class="kpi green"><div class="label">발행 콘텐츠</div><div class="value" id="kPosted">0</div></div>
+    <div class="kpi purple"><div class="label">총 조회수</div><div class="value" id="kViews">0</div></div>
+    <div class="kpi yellow"><div class="label">총 반응(좋아요+댓글)</div><div class="value" id="kEngage">0</div></div>
+  </div>
+  <div class="card">
+    <h3>📌 최근 캠페인</h3>
+    <div id="recentCampaigns"></div>
+  </div>
+</div>
+
+<!-- ══════════ 캠페인 목록 ══════════ -->
+<div class="tab" id="tab-campaigns" style="display:none">
+  <div class="card">
+    <h3>📋 전체 캠페인</h3>
+    <div style="overflow-x:auto">
+    <table id="campTable">
+      <thead><tr><th>ID</th><th>제품</th><th>카테고리</th><th>타겟</th><th>플랫폼</th><th>기간</th><th>콘텐츠</th><th>상태</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 새 캠페인 ══════════ -->
+<div class="tab" id="tab-create" style="display:none">
+  <div class="grid g2">
+    <div class="card">
+      <h3>🚀 새 바이럴 캠페인</h3>
+      <label>제품명 * (게임/사이트/브랜드/제품)</label>
+      <input id="fName" placeholder="예: 트릭컬 리바이브, 나이키 에어포스, notion.so">
+      <label>제품 설명</label>
+      <textarea id="fDesc" placeholder="제품 소개, 특징, 강점 등 — AI가 사실 기반으로 글을 씁니다"></textarea>
+      <label>카테고리</label>
+      <select id="fCat">
+        <option value="game">게임</option>
+        <option value="fashion">패션/브랜드 (옷·신발·가방)</option>
+        <option value="platform">플랫폼/사이트/앱</option>
+        <option value="product">일반 제품 (가전·디지털 등)</option>
+        <option value="place">매장/카페/숙소</option>
+      </select>
+      <label>타겟 연령</label>
+      <div class="chips" id="ageChips"></div>
+      <label>타겟 플랫폼 (복수 선택)</label>
+      <div class="chips" id="platChips"></div>
+      <div class="grid g2">
+        <div><label>시작일</label><input type="date" id="fStart"></div>
+        <div><label>종료일</label><input type="date" id="fEnd"></div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="btn" onclick="createCampaign()">캠페인 생성</button>
+        <button class="btn ghost" onclick="createAndGenerate()">생성 + 글 즉시 생성</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>💡 학습된 바이럴 패턴 (10,074건+)</h3>
+      <div id="patternInfo" style="font-size:14px;line-height:1.8;color:var(--t2)">
+        로딩 중...
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 바이럴 지표 ══════════ -->
+<div class="tab" id="tab-metrics" style="display:none">
+  <div class="card">
+    <h3>📈 캠페인별 성과</h3>
+    <select id="mCampSel" onchange="loadMetrics()" style="max-width:340px;margin-bottom:14px">
+      <option value="">캠페인 선택</option>
+    </select>
+    <div class="grid g4" style="margin-bottom:14px">
+      <div class="kpi accent"><div class="label">조회수</div><div class="value" id="mViews">0</div></div>
+      <div class="kpi green"><div class="label">좋아요</div><div class="value" id="mLikes">0</div></div>
+      <div class="kpi purple"><div class="label">댓글</div><div class="value" id="mComments">0</div></div>
+      <div class="kpi yellow"><div class="label">클릭</div><div class="value" id="mClicks">0</div></div>
+    </div>
+    <div id="metricsChart" style="height:220px;display:flex;align-items:flex-end;gap:6px;border-bottom:1px solid var(--border);padding-bottom:0;overflow-x:auto"></div>
+    <div style="font-size:12px;color:var(--t3);margin-top:6px">일별 조회수 (최근 14일)</div>
+  </div>
+  <div class="card">
+    <h3>📝 지표 직접 입력 (수동 집계)</h3>
+    <p style="font-size:13px;color:var(--t2);margin-bottom:10px">발행 후 각 플랫폼에서 확인된 지표를 입력하면 대시보드에 반영됩니다.</p>
+    <div class="grid g4">
+      <div><label>날짜</label><input type="date" id="mDate"></div>
+      <div><label>조회수</label><input type="number" id="mV" value="0"></div>
+      <div><label>좋아요</label><input type="number" id="mL" value="0"></div>
+      <div><label>댓글</label><input type="number" id="mC" value="0"></div>
+    </div>
+    <button class="btn small" style="margin-top:12px" onclick="submitMetrics()">지표 등록</button>
+  </div>
+</div>
+
+</div>
+
+<!-- 모달 -->
+<div id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div id="modal"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+const API = '';
+let AGE = '20-30', PLATS = new Set(['naver','youtube','dc']);
+const CAT_LABEL = {game:'게임',fashion:'패션',platform:'플랫폼',product:'제품',place:'매장'};
+
+// ── 탭 ──
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(x=>x.style.display='none');
+  document.getElementById('tab-'+t).style.display='block';
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab===t));
+  if(t==='dashboard') loadOverview();
+  if(t==='campaigns') loadCampaigns();
+  if(t==='metrics') {loadCampSelect(); loadMetrics();}
+}
+
+// ── 칩 ──
+function makeChips(el, items, onPick, multi){
+  el.innerHTML='';
+  items.forEach(([v,label])=>{
+    const c=document.createElement('div');
+    c.className='chip'+(multi&&PLATS.has(v)?' on':(!multi&&v===AGE?' on':''));
+    c.textContent=label; c.dataset.v=v;
+    c.onclick=()=>{
+      if(multi){ c.classList.toggle('on'); c.classList.contains('on')?PLATS.add(v):PLATS.delete(v); }
+      else { el.querySelectorAll('.chip').forEach(x=>x.classList.remove('on')); c.classList.add('on'); onPick(v); }
+    };
+    el.appendChild(c);
+  });
+}
+makeChips(document.getElementById('ageChips'), [['10-20','10-20대'],['20-30','20-30대'],['30-40','30-40대'],['40+','40대+']], v=>AGE=v, false);
+makeChips(document.getElementById('platChips'), [['naver','네이버 블로그'],['youtube','유튜브 숏츠'],['dc','DC/커뮤니티'],['arca','아카라이브']], null, true);
+document.getElementById('fStart').value = new Date().toISOString().slice(0,10);
+document.getElementById('fEnd').value = new Date(Date.now()+13*864e5).toISOString().slice(0,10);
+document.getElementById('mDate').value = new Date().toISOString().slice(0,10);
+
+// ── API ──
+async function api(path, opts){
+  const r = await fetch(API+path, opts);
+  if(!r.ok){ const e = await r.json().catch(()=>({detail:r.statusText})); throw new Error(e.detail||'에러'); }
+  return r.json();
+}
+
+// ── 대시보드 ──
+async function loadOverview(){
+  try{
+    const s = await api('/api/stats/overview');
+    kCamp.textContent = s.campaigns; kPosted.textContent = s.posted;
+    kViews.textContent = fmt(s.views); kEngage.textContent = fmt(s.likes+s.comments);
+    const camps = await api('/api/campaigns');
+    document.getElementById('recentCampaigns').innerHTML = camps.length ? camps.slice(0,5).map(c=>`
+      <div class="mrow" style="border-bottom:1px solid var(--border);padding:8px 0">
+        <div><b>#${c.id} ${esc(c.product_name)}</b> <span class="badge ${c.status}">${c.status==='active'?'진행중':c.status}</span>
+        <div style="font-size:13px;color:var(--t2)">${CAT_LABEL[c.category]||c.category} · ${c.target_age} · 발행 ${c.posted_count}/${c.content_count}</div></div>
+        <button class="btn ghost small" onclick="openCampaign(${c.id})">열기</button>
+      </div>`).join('') : '<div class="empty">아직 캠페인이 없습니다 — 새 캠페인 탭에서 만들어보세요</div>';
+    document.getElementById('enginePill').textContent = '엔진 정상 · 학습패턴 로드됨';
+    document.getElementById('enginePill').style.color='var(--green)';
+    // 패턴 정보
+    document.getElementById('patternInfo').innerHTML = `
+      <b style="color:var(--t1)">✅ 10,074건 실측 데이터 기반</b><br>
+      · <b>유튜브</b>: 체험형 후킹 조회수 1.93배 — "광고에 뜨던 X, 해봤습니다" (249만 검증)<br>
+      · <b>DC 커뮤니티</b>: 정보 모음형 성공률 3.18배 / 질문형 0.24배 실패 / 제목 15자 이내<br>
+      · <b>블로그</b>: 검색어 전방 배치 + 신뢰마커(후기·내돈내산·찐후기) 92% 포함<br>
+      · <b>제품 갤러리</b>가 게임 갤러리보다 추천 3.3배 — 브랜드 홍보에 커뮤니티 강력`;
+  }catch(e){ toast('로드 실패: '+e.message, true); }
+}
+
+// ── 캠페인 목록 ──
+async function loadCampaigns(){
+  const camps = await api('/api/campaigns');
+  document.querySelector('#campTable tbody').innerHTML = camps.map(c=>`
+    <tr>
+      <td>${c.id}</td>
+      <td><b>${esc(c.product_name)}</b><div style="font-size:12px;color:var(--t3)">${esc((c.description||'').slice(0,40))}</div></td>
+      <td>${CAT_LABEL[c.category]||c.category}</td>
+      <td>${c.target_age}</td>
+      <td style="font-size:13px">${JSON.parse(c.platforms||'[]').join(', ')}</td>
+      <td style="font-size:13px">${(c.start_date||'').slice(5)}~${(c.end_date||'').slice(5)}</td>
+      <td>${c.posted_count}/${c.content_count}</td>
+      <td><span class="badge ${c.status}">${c.status==='active'?'진행중':c.status}</span></td>
+      <td><button class="btn ghost small" onclick="openCampaign(${c.id})">상세</button></td>
+    </tr>`).join('') || '<tr><td colspan="9" class="empty">캠페인 없음</td></tr>';
+}
+
+// ── 생성 ──
+async function createCampaign(gen){
+  const name = fName.value.trim();
+  if(!name) return toast('제품명을 입력하세요', true);
+  const body = {
+    product_name: name, description: fDesc.value.trim(),
+    category: fCat.value, target_age: AGE,
+    platforms: [...PLATS], start_date: fStart.value, end_date: fEnd.value,
+  };
+  try{
+    const r = await api('/api/campaigns', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    toast('캠페인 #'+r.id+' 생성 완료');
+    if(gen){ await openCampaign(r.id, true); }
+    else { showTab('campaigns'); }
+  }catch(e){ toast('생성 실패: '+e.message, true); }
+}
+function createAndGenerate(){ createCampaign(true); }
+
+// ── 캠페인 상세 모달 ──
+async function openCampaign(cid, autoGen){
+  const c = await api('/api/campaigns/'+cid);
+  const plats = c.platforms;
+  modal.innerHTML = `
+    <div class="mrow">
+      <div><h3 style="font-size:18px">#${c.id} ${esc(c.product_name)}</h3>
+      <span class="badge ${c.status}">${c.status==='active'?'진행중':c.status}</span>
+      <span style="color:var(--t2);font-size:13px;margin-left:8px">${CAT_LABEL[c.category]} · ${c.target_age} · ${c.start_date}~${c.end_date}</span></div>
+      <button class="btn ghost small" onclick="closeModal()">닫기</button>
+    </div>
+    ${c.description?`<p style="color:var(--t2);font-size:14px;margin:8px 0">${esc(c.description)}</p>`:''}
+    <div class="section-title">콘텐츠 생성</div>
+    <div class="mrow">
+      <div class="chips">
+        ${plats.map(p=>`<div class="chip" onclick="genContent(${cid},'${p==='youtube'?'youtube':p}')">${p==='naver'?'네이버 블로그':p==='youtube'?'유튜브 숏츠':p==='dc'?'DC 커뮤니티':p}</div>`).join('')}
+      </div>
+      <div style="font-size:12px;color:var(--t3)">플랫폼을 누르면 AI가 학습패턴 기반으로 생성합니다</div>
+    </div>
+    <div class="section-title">콘텐츠 목록 (${c.contents.length})</div>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>플랫폼</th><th>제목</th><th>상태</th><th>생성일</th><th>동작</th></tr></thead>
+      <tbody>${c.contents.map(x=>`
+        <tr>
+          <td>${x.platform}</td>
+          <td style="max-width:260px"><a href="javascript:void(0)" onclick="viewContent(${cid},${x.id})">${esc((x.title||'').slice(0,40))}</a></td>
+          <td><span class="badge ${x.status}">${x.status}</span></td>
+          <td style="font-size:13px;color:var(--t2)">${(x.created_at||'').slice(5,16)}</td>
+          <td>
+            ${x.kind==='shorts'&&x.status==='pending'?`<button class="btn small" onclick="makeVideo(${x.id})">🎬 영상 생성</button>`:''}
+            ${x.status==='rendered'?`<button class="btn green small" data-video="${encodeURIComponent((x.post_url||'').split(/[\\\\/]/).pop())}" onclick="playVideo(this.dataset.video)">▶ 재생</button>`:''}
+          </td>
+        </tr>`).join('') || '<tr><td colspan="5" class="empty">아직 콘텐츠 없음 — 위 플랫폼 칩으로 생성</td></tr>'}
+      </tbody>
+    </table>
+    </div>`;
+  modalBg.style.display='flex';
+  if(autoGen && plats.length){
+    // 생성+즉시생성 모드: 첫 플랫폼으로 자동 생성
+    const p = plats.includes('naver')?'naver':plats[0];
+    genContent(cid, p==='youtube'?'youtube':p);
+  }
+}
+
+async function genContent(cid, platform){
+  toast('AI 생성 중... (최대 1분)');
+  try{
+    const r = await api(`/api/campaigns/${cid}/generate?platform=${platform}&count=1`, {method:'POST'});
+    toast('생성 완료: '+(r.generated[0]?.title||''));
+    openCampaign(cid);
+  }catch(e){ toast('생성 실패: '+e.message, true); }
+}
+
+async function makeVideo(cid){
+  toast('🎬 영상 렌더링 중... (이미지 수집+TTS+렌더, 1~3분)');
+  try{
+    const r = await api(`/api/contents/${cid}/make_video`, {method:'POST'});
+    toast(`영상 완성! ${r.duration.toFixed(1)}초`);
+    playVideo(r.video);
+  }catch(e){ toast('영상 생성 실패: '+e.message, true); }
+}
+
+function playVideo(path){
+  modal.innerHTML = `<div class="mrow"><h3>🎬 생성된 숏츠</h3><button class="btn ghost small" onclick="closeModal()">닫기</button></div>
+  <video controls autoplay src="/videos/${encodeURIComponent(path.split(/[\\\\/]/).pop())}"></video>
+  <p style="font-size:13px;color:var(--t2);margin-top:8px">파일: ${esc(path)}</p>`;
+  modalBg.style.display='flex';
+}
+
+async function viewContent(cid, xid){
+  const c = await api('/api/campaigns/'+cid);
+  const x = c.contents.find(v=>v.id===xid);
+  if(!x) return;
+  modal.innerHTML = `<div class="mrow"><h3>📄 ${esc(x.platform)} 콘텐츠 #${x.id}</h3><button class="btn ghost small" onclick="closeModal()">닫기</button></div>
+    <div style="white-space:pre-wrap;font-size:14px;line-height:1.7;background:var(--surface2);border-radius:10px;padding:14px;max-height:55vh;overflow-y:auto">${esc(x.body)}</div>`;
+  modalBg.style.display='flex';
+}
+
+// ── 지표 ──
+async function loadCampSelect(){
+  const camps = await api('/api/campaigns');
+  const sel = mCampSel;
+  sel.innerHTML = '<option value="">캠페인 선택</option>' + camps.map(c=>`<option value="${c.id}">#${c.id} ${esc(c.product_name)}</option>`).join('');
+}
+
+async function loadMetrics(){
+  const cid = mCampSel.value;
+  if(!cid){ mViews.textContent=mLikes.textContent=mComments.textContent=mClicks.textContent='0';
+    metricsChart.innerHTML='<div class="empty" style="margin:auto">캠페인을 선택하세요</div>'; return; }
+  const c = await api('/api/campaigns/'+cid);
+  const m = c.metrics;
+  const sum = k => m.reduce((a,b)=>a+(b[k]||0),0);
+  mViews.textContent = fmt(sum('views')); mLikes.textContent = fmt(sum('likes'));
+  mComments.textContent = fmt(sum('comments')); mClicks.textContent = fmt(sum('clicks'));
+  // 최근 14일 바 차트
+  const days = [...Array(14)].map((_,i)=>{const d=new Date(Date.now()-(13-i)*864e5);return d.toISOString().slice(0,10)});
+  const byDate = Object.fromEntries(m.map(x=>[x.date, x.views||0]));
+  const max = Math.max(1, ...days.map(d=>byDate[d]||0));
+  metricsChart.innerHTML = days.map(d=>{
+    const v = byDate[d]||0, h = Math.round(v/max*190);
+    return `<div title="${d}: ${fmt(v)}" style="flex:1;min-width:26px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:220px">
+      <div style="font-size:10px;color:var(--t3);margin-bottom:2px">${v?fmt(v):''}</div>
+      <div style="width:70%;background:linear-gradient(180deg,var(--accent),rgba(88,166,255,.4));border-radius:4px 4px 0 0;height:${Math.max(h,v?4:1)}px"></div>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px">${d.slice(8)}</div>
+    </div>`;
+  }).join('');
+}
+
+async function submitMetrics(){
+  const cid = mCampSel.value;
+  if(!cid) return toast('캠페인을 선택하세요', true);
+  try{
+    await api(`/api/campaigns/${cid}/metrics?date=${mDate.value}&views=${+mV.value}&likes=${+mL.value}&comments=${+mC.value}`, {method:'POST'});
+    toast('지표 등록 완료'); loadMetrics();
+  }catch(e){ toast('등록 실패: '+e.message, true); }
+}
+
+// ── 유틸 ──
+function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+function fmt(n){ n=+n||0; return n>=10000?(n/10000).toFixed(1).replace('.0','')+'만':n.toLocaleString() }
+function toast(msg, err){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = err?'err':''; t.style.display='block';
+  clearTimeout(t._h); t._h = setTimeout(()=>t.style.display='none', 3000);
+}
+function closeModal(){ modalBg.style.display='none'; }
+const modal = document.getElementById('modal'), modalBg = document.getElementById('modalBg');
+
+showTab('dashboard');
+</script>
+</body>
+</html>
