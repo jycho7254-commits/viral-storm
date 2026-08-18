@@ -45,6 +45,10 @@
 - [x] 트릭컬 테스트 영상 제작 검증 (20초/1080x1920/4.2MB, 자막+오디오 정상)
 - [x] youtube_upload.py — Data API v3 업로드 모듈 (unlisted 기본)
 - [x] FFmpeg 9.0 설치 (winget)
+- [x] **yuv420p 호환 인코딩** — 곰플레이어/기본 플레이어 재생 가능 (08-18 저녁, High profile+faststart)
+- [x] **AI 숏츠 대본 생성기 (shorts_script.py)** — 후킹→경험→CTA 6문장 구조, 페르소나+검증된 팩트 주입
+- [x] **BGM 로컬 합성+믹싱** — 저작권 0 외부의존성 0, Am-F-C-G 로파이 파드, 나레이션 뒤 -24dB
+- [x] **풀 파이프라인 E2E 검증** — AI 대본→TTS→BGM→렌더 26초 영상 완성 (08-18)
 
 ---
 
