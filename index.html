@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viral Storm — 종합 바이럴 운영 (GitHub Pages)</title>
+<style>
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1c2128;--border:#30363d;
+  --t1:#e6edf3;--t2:#8b949e;--t3:#6e7681;
+  --accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t1);font-family:'Pretendard',-apple-system,'Segoe UI',sans-serif;font-size:15px}
+a{color:var(--accent);text-decoration:none}
+.container{max-width:1280px;margin:0 auto;padding:0 16px}
+
+/* topbar */
+.topbar{border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:50}
+.topbar-inner{display:flex;align-items:center;gap:14px;height:56px}
+.logo{font-size:19px;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.tabs{display:flex;gap:2px;margin-left:12px;overflow-x:auto}
+.tabs button{background:none;border:none;color:var(--t2);font-size:15px;font-weight:600;padding:8px 14px;cursor:pointer;border-radius:8px;white-space:nowrap}
+.tabs button.on{color:var(--t1);background:var(--surface2)}
+.tabs button:hover{color:var(--t1)}
+.spacer{flex:1}
+.pill{font-size:13px;color:var(--t2);background:var(--surface2);padding:4px 10px;border-radius:99px;border:1px solid var(--border)}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px}
+.card h3{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* kpi */
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.kpi .label{font-size:13px;color:var(--t2)}
+.kpi .value{font-size:28px;font-weight:800;margin-top:4px}
+.kpi .sub{font-size:12px;color:var(--t3);margin-top:2px}
+.kpi.accent .value{color:var(--accent)}
+.kpi.green .value{color:var(--green)}
+.kpi.purple .value{color:var(--purple)}
+.kpi.yellow .value{color:var(--yellow)}
+
+/* form */
+label{display:block;font-size:13px;color:var(--t2);margin:10px 0 5px;font-weight:600}
+input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--t1);padding:10px 12px;font-size:15px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{min-height:80px;resize:vertical}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:15px;font-weight:700;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:var(--surface2);color:var(--t1);border:1px solid var(--border)}
+.btn.green{background:var(--green)}
+.btn.small{padding:6px 12px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:7px 14px;font-size:14px;cursor:pointer;color:var(--t2)}
+.chip.on{background:rgba(88,166,255,.15);border-color:var(--accent);color:var(--accent);font-weight:700}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--t2);font-size:13px;padding:8px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{font-size:12px;padding:2px 8px;border-radius:99px;font-weight:700}
+.badge.active{background:rgba(63,185,80,.15);color:var(--green)}
+.badge.pending{background:rgba(210,153,34,.15);color:var(--yellow)}
+.badge.posted{background:rgba(88,166,255,.15);color:var(--accent)}
+.badge.rendered{background:rgba(188,140,255,.15);color:var(--purple)}
+.badge.failed{background:rgba(248,81,73,.15);color:var(--red)}
+
+/* toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;z-index:100;display:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#toast.err{border-color:var(--red)}
+
+/* modal */
+#modalBg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;display:none;align-items:center;justify-content:center;padding:16px}
+#modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:760px;width:100%;max-height:85vh;overflow-y:auto;padding:22px}
+.mrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+video{width:100%;max-height:420px;border-radius:10px;background:#000;margin-top:10px}
+
+.section-title{font-size:13px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px}
+.empty{color:var(--t3);text-align:center;padding:40px 0;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <div class="logo">🌩️ Viral Storm</div>
+    <div class="tabs">
+      <button class="on" data-tab="dashboard" onclick="showTab('dashboard')">대시보드</button>
+      <button data-tab="campaigns" onclick="showTab('campaigns')">캠페인</button>
+      <button data-tab="create" onclick="showTab('create')">새 캠페인</button>
+      <button data-tab="metrics" onclick="showTab('metrics')">바이럴 지표</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="pill" id="enginePill">엔진 확인 중</div>
+  </div>
+</div>
+
+<div class="container" style="padding:16px">
+
+<!-- ══════════ 대시보드 ══════════ -->
+<div class="tab" id="tab-dashboard">
+  <div class="grid g4" style="margin-bottom:14px">
+    <div class="kpi accent"><div class="label">진행 캠페인</div><div class="value" id="kCamp">0</div></div>
+    <div class="kpi green"><div class="label">발행 콘텐츠</div><div class="value" id="kPosted">0</div></div>
+    <div class="kpi purple"><div class="label">총 조회수</div><div class="value" id="kViews">0</div></div>
+    <div class="kpi yellow"><div class="label">총 반응(좋아요+댓글)</div><div class="value" id="kEngage">0</div></div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <h3>📊 마케팅 성과 지표</h3>
+    <div class="grid g4" id="kpiMarketing"></div>
+  </div>
+  <div class="card">
+    <h3>📌 최근 캠페인</h3>
+    <div id="recentCampaigns"></div>
+  </div>
+</div>
+
+<!-- ══════════ 캠페인 목록 ══════════ -->
+<div class="tab" id="tab-campaigns" style="display:none">
+  <div class="card">
+    <h3>📋 전체 캠페인</h3>
+    <div style="overflow-x:auto">
+    <table id="campTable">
+      <thead><tr><th>ID</th><th>제품</th><th>카테고리</th><th>타겟</th><th>플랫폼</th><th>기간</th><th>콘텐츠</th><th>상태</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 새 캠페인 ══════════ -->
+<div class="tab" id="tab-create" style="display:none">
+  <div class="grid g2">
+    <div class="card">
+      <h3>🚀 새 바이럴 캠페인</h3>
+      <label>제품명 * (게임/사이트/브랜드/제품)</label>
+      <input id="fName" placeholder="예: 트릭컬 리바이브, 나이키 에어포스, notion.so">
+      <label>제품 설명</label>
+      <textarea id="fDesc" placeholder="제품 소개, 특징, 강점 등 — AI가 사실 기반으로 글을 씁니다"></textarea>
+      <label>카테고리</label>
+      <select id="fCat">
+        <option value="game">게임</option>
+        <option value="fashion">패션/브랜드 (옷·신발·가방)</option>
+        <option value="platform">플랫폼/사이트/앱</option>
+        <option value="product">일반 제품 (가전·디지털 등)</option>
+        <option value="place">매장/카페/숙소</option>
+      </select>
+      <label>타겟 연령</label>
+      <div class="chips" id="ageChips"></div>
+      <label>타겟 플랫폼 (복수 선택)</label>
+      <div class="chips" id="platChips"></div>
+      <div class="grid g2">
+        <div><label>시작일</label><input type="date" id="fStart"></div>
+        <div><label>종료일</label><input type="date" id="fEnd"></div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="btn" onclick="createCampaign()">캠페인 생성</button>
+        <button class="btn ghost" onclick="createAndGenerate()">생성 + 글 즉시 생성</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>💡 학습된 바이럴 패턴 (10,074건+)</h3>
+      <div id="patternInfo" style="font-size:14px;line-height:1.8;color:var(--t2)">
+        로딩 중...
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 바이럴 지표 ══════════ -->
+<div class="tab" id="tab-metrics" style="display:none">
+  <div class="card">
+    <h3>📈 캠페인별 성과</h3>
+    <select id="mCampSel" onchange="loadMetrics()" style="max-width:340px;margin-bottom:14px">
+      <option value="">캠페인 선택</option>
+    </select>
+    <div class="grid g4" style="margin-bottom:14px">
+      <div class="kpi accent"><div class="label">조회수</div><div class="value" id="mViews">0</div></div>
+      <div class="kpi green"><div class="label">좋아요</div><div class="value" id="mLikes">0</div></div>
+      <div class="kpi purple"><div class="label">댓글</div><div class="value" id="mComments">0</div></div>
+      <div class="kpi yellow"><div class="label">클릭</div><div class="value" id="mClicks">0</div></div>
+    </div>
+    <div class="grid g4" id="mKpiMarketing" style="margin-bottom:14px"></div>
+    <div id="metricsChart" style="height:220px;display:flex;align-items:flex-end;gap:6px;border-bottom:1px solid var(--border);padding-bottom:0;overflow-x:auto"></div>
+    <div style="font-size:12px;color:var(--t3);margin-top:6px">일별 조회수 (최근 14일)</div>
+  </div>
+  <div class="card">
+    <h3>📝 지표 직접 입력 (수동 집계)</h3>
+    <p style="font-size:13px;color:var(--t2);margin-bottom:10px">발행 후 각 플랫폼에서 확인한 지표를 입력하세요. 노출/설치/비용/매출을 넣으면 CPI·CTR·VTR·ROAS가 자동 계산됩니다.</p>
+    <div class="section-title">기본 (참여)</div>
+    <div class="grid g4">
+      <div><label>날짜</label><input type="date" id="mDate"></div>
+      <div><label>조회수</label><input type="number" id="mV" value="0"></div>
+      <div><label>좋아요</label><input type="number" id="mL" value="0"></div>
+      <div><label>댓글</label><input type="number" id="mC" value="0"></div>
+    </div>
+    <div class="section-title">광고 성과</div>
+    <div class="grid g4">
+      <div><label>노출수</label><input type="number" id="mImp" value="0"></div>
+      <div><label>클릭수</label><input type="number" id="mClick" value="0"></div>
+      <div><label>설치(전환)수</label><input type="number" id="mInst" value="0"></div>
+      <div><label>집행 비용 (원)</label><input type="number" id="mSpend" value="0"></div>
+    </div>
+    <div class="grid g4">
+      <div><label>발생 매출 (원)</label><input type="number" id="mRev" value="0"></div>
+    </div>
+    <button class="btn small" style="margin-top:12px" onclick="submitMetrics()">지표 등록</button>
+  </div>
+</div>
+
+</div>
+
+<!-- 모달 -->
+<div id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div id="modal"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+const API = '';
+let AGE = '20-30', PLATS = new Set(['naver','youtube','dc']);
+const CAT_LABEL = {game:'게임',fashion:'패션',platform:'플랫폼',product:'제품',place:'매장'};
+
+// ── 탭 ──
+function showTab(t){
+  document.querySelectorAll('.tab').forEach(x=>x.style.display='none');
+  document.getElementById('tab-'+t).style.display='block';
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab===t));
+  if(t==='dashboard') loadOverview();
+  if(t==='campaigns') loadCampaigns();
+  if(t==='metrics') {loadCampSelect(); loadMetrics();}
+}
+
+// ── 칩 ──
+function makeChips(el, items, onPick, multi){
+  el.innerHTML='';
+  items.forEach(([v,label])=>{
+    const c=document.createElement('div');
+    c.className='chip'+(multi&&PLATS.has(v)?' on':(!multi&&v===AGE?' on':''));
+    c.textContent=label; c.dataset.v=v;
+    c.onclick=()=>{
+      if(multi){ c.classList.toggle('on'); c.classList.contains('on')?PLATS.add(v):PLATS.delete(v); }
+      else { el.querySelectorAll('.chip').forEach(x=>x.classList.remove('on')); c.classList.add('on'); onPick(v); }
+    };
+    el.appendChild(c);
+  });
+}
+makeChips(document.getElementById('ageChips'), [['10-20','10-20대'],['20-30','20-30대'],['30-40','30-40대'],['40+','40대+']], v=>AGE=v, false);
+makeChips(document.getElementById('platChips'), [['naver','네이버 블로그'],['youtube','유튜브 숏츠'],['dc','DC/커뮤니티'],['arca','아카라이브']], null, true);
+document.getElementById('fStart').value = new Date().toISOString().slice(0,10);
+document.getElementById('fEnd').value = new Date(Date.now()+13*864e5).toISOString().slice(0,10);
+document.getElementById('mDate').value = new Date().toISOString().slice(0,10);
+
+// ── API ──
+async function api(path, opts){
+  const r = await fetch(API+path, opts);
+  if(!r.ok){ const e = await r.json().catch(()=>({detail:r.statusText})); throw new Error(e.detail||'에러'); }
+  return r.json();
+}
+
+
+// ═══════════ 정적 사이트 전용 — localStorage DB ═══════════
+const SEED = {"campaigns": [{"id": 1, "name": "무신사 스탠다드 후드", "product_name": "무신사 스탠다드 후드", "description": "무신사 자체 브랜드 기본 후드티. 가성비 좋고 두께감 적당함", "category": "fashion", "target_age": "20-30", "platforms": "[\"naver\", \"youtube\", \"dc\"]", "start_date": "2026-08-19", "end_date": "2026-09-02", "status": "active", "created_at": "2026-08-19 08:44:06"}], "contents": [{"id": 1, "campaign_id": 1, "platform": "naver", "kind": "post", "title": "무신사 스탠다드 후드 실착 후기, 가성비 진짜일까? 대학생이 3주 입어본 솔직 리뷰", "body": "무신사 스탠다드 후드 실착 후기, 가성비 진짜일까? 대학생이 3주 입어본 솔직 리뷰\n\n안녕하세요! 오늘은 게임이 아니라 잠깐 패션 얘기 해보려고요ㅋㅋ 저 원래 옷에는 관심 없다가 요즘 갑자기 뿌리 깊은 겜덕의 스타일 혁명(?)을 꿈꾸며 옷장을 정리 중인 대학생이에요.\n\n게임만큼은 고수인데 패션은 완전 초보라서, 뭘 사도 실패하기 딱 좋은 저 같은 사람한테 무신사 스탠다드 후드는 그야말로 튜토리얼 아이템 같은 존재였어요. 아무 생각 없이 던져도 되는 기본템! 오늘은 제가 직접 주문해서 3주 정도 입어본 후기를 낱낱이 파헤쳐 보겠어요.\n\n일단 구매 계기부터\n\n저 사실 커뮤니티에서 무신사 스탠다드 얘기가 나올 때마다 \"가성비 갑이다\", \"기본 후드는 이거면 됨\" 이런 말을 수십 번은 본 거 같아요. 그런데 막상 사려니까 \"진짜일까? 광고 아닐까?\" 하는 의심도 들고요. 게임 홍보글에 속아본 경험이 한두 번이 아니라서ㅋㅋ 그래서\n직접 사서 검증해보자! 하는 마음으로 주문했어요.\n\n가격대는 제가 느끼기에 대학생 알바비 기준으로 부담 없는 수준이었어요. 이게 핵심이에요 (웃음).. 명품 후드 사러는 게 아니잖아요. 그냔 편하게 막 입을 거면 가격이 제일 중요하죠.\n\n첫 착용 소감, 씹찢이냐?\n\n도착해서 바로 개봉하고 입어봤는데, 일단 손으로 만졌을 때 느낌이 생각보다 좋았어요. 면 소감인 게 이 가격에 이 정도면 선방이다 싶었달까요. 두께감도 너무 얇아서 맥시너스러운 느낌도 아니고, 그렇다고 뚱뚱한 겨울 후드처럼 답답한 것도 아님.. 딱 적당해요. 봄가을에 캐주얼하게 입기 좋은 그런 무게감이에요.\n\n그리고 핏! 여기가 제일 놀랐던 부분인데요. 저 그냥 몸에 딱 붙는 사이즈 주문했는데, 어깨 라인이 은근 잘 잡혀서 생각보다 멋있게 떨어지더라고요. 요즘 유행하는 오버사이즈 느낌 원하시면 한 사이즈 올리는 것도 방법인데, 이건 본인 취향에 따라 갈리니까 무신사에서 실측 사이즈 표 꼭 확인해 보세요.. 저는 후회 안 했는데 친구는 한 치수 크게 사서 그것도 잘 맞았어요.\n\n3주 실착해본 솔직한 장단점\n\n장점부터 말하자면 일단 활용도가 미쳤어요. 집에서 게임할 때, 강의 갈 때, 편의점 갈 때, 그냥 어디든 입게 되더라고요. 색도 무난한 걸 골라서 뭐든 막 입을 수 있고요. 세탁 후에도 크게 뭉개지거나 늘어나는 느낌이 없어서 기본템으로서의 역할은 제대로 하는 중이에요.\n\n단점도 솔직하게 말하면요 ㅋㅋ.. 일단 소재가 면 위주라서 그런지 완전 신제품 때 특유의 새 옷 느낌(?)이 좀 있긴 했어요. 한두 번 빨고 나니 괜찮아졌지만 예민하신 분들은 참고하세요. 그리고 이건 기본 후드의 숙명인데,\n화려한 디자인이나 특별한 포인트를 기대하시면 안 됩니다. 여긴 오로지 기본기 승부하는 아이템이라ㅋㅋ 스킬트리가 단순한 대신 성능이 안정적인 캐릭터 느낌이랄까요.\n\n또 한 가지, 워낙 많이 입는 아이템이라 나중에 좀 더 두꺼운 겨울용이 필요할 수는 있어요 ㅋㅋ.. 이건 단점이라기보다는 용도가 다르다는 얘기지만요.\n\n최종 평가, 갓겜... 아니 갓아이템인가?\n\n결론부터 말하면 저는 재구매 의사 있어요. 특히 이 가격에 이 퀄리티면 가성비 무시 못 해요. 패션 초보자거나 그냥 편한 기본 후드 하나 필요한 분들에게는 거의 정답에 가까운 선택지라고 생각해요 ㅋㅋ.. 무신사 스탠다드 후드는 무난하게 여러 개 모아서\n입어도 전혀 아깝지 않은 그런 아이템이에요.\n\n반대로 유니크한 디자인 찾으시는 분, 고급 소재 원하시는 분은 다른 쪽을 보시는 게 나을 듯. 거기까지 기대하면 배신감 느낍니다ㅋㅋ\n\n저는 이번에 한 장 샀는데 곧 다른 색 하나 더 노려보려고요. 블랙이랑 다른 색 중에 뭐 살지 고민 중인데, 혹시 무신사 스탠다드 후드 입어보신 분들 계시면 댓글로 후기 남겨주세요! 특히 사이즈 고민하시는 분들은 편하게 물어보시면 아는 선에서 답해드릴게요. 그럼 다음엔 게임 후기로 돌아오겠어요ㅋㅋ.", "status": "pending", "post_url": null, "metrics_json": "{}", "created_at": "2026-08-19 08:45:24", "posted_at": null}, {"id": 2, "campaign_id": 1, "platform": "youtube", "kind": "shorts", "title": "인스타 광고에 ㅈㄴ 뜨던 무신사 후드 결국 샀습니다", "body": "인스타 광고에 ㅈㄴ 뜨던 무신사 후드 결국 샀습니다\n출근길에 입어봤는데 처음엔 좀 크게 느껴졌어요\n근데 세탁 한 번 하니까 딱 오버핏으로 자리 잡더라고요\n면 소감인데 촉감이 가격 대비 안 믿기더라고요\n오만 원짜리 브랜드 후드랑 비교해도 밀리지 않아요\n사이즈만 잘 고르면 진짜 가성비니까 직접 입어보세요", "status": "rendered", "post_url": "C:\\Users\\user\\Desktop\\viral-storm\\data\\shorts_out\\camp1_c2_0819_085410.mp4", "metrics_json": "{\"duration\": 22.433333}", "created_at": "2026-08-19 08:45:28", "posted_at": null}], "metrics_daily": [{"id": 1, "campaign_id": 1, "date": "2026-08-19", "views": 31500, "likes": 587, "comments": 23, "clicks": 8500, "impressions": 500000, "installs": 320, "spend": 400000.0, "revenue": 2100000.0}]};
+const LS_KEY = 'viral_storm_db_v1';
+const SERVER_URL_KEY = 'viral_server_url';
+
+// 서버 URL (AI 생성용)
+function serverUrl(){
+  let u = localStorage.getItem(SERVER_URL_KEY);
+  if(u === null){ u = 'http://localhost:8100'; localStorage.setItem(SERVER_URL_KEY, u); }
+  return u;
+}
+
+function loadDB(){
+  let db = localStorage.getItem(LS_KEY);
+  if(!db){ db = JSON.stringify(SEED); localStorage.setItem(LS_KEY, db); }
+  return JSON.parse(db);
+}
+function saveDB(db){ localStorage.setItem(LS_KEY, JSON.stringify(db)); }
+function resetDB(){ localStorage.removeItem(LS_KEY); location.reload(); }
+
+let _nextId = null;
+function nextId(db, table){
+  if(_nextId === null){
+    let mx = 0;
+    for(const t of ['campaigns','contents','metrics_daily']){
+      for(const r of (db[t]||[])) mx = Math.max(mx, r.id||0);
+    }
+    _nextId = mx + 1;
+  }
+  return _nextId++;
+}
+
+function computeKpis(rows){
+  const s = k => rows.reduce((a,r)=>a+(+r[k]||0),0);
+  const views=s('views'),likes=s('likes'),comments=s('comments'),clicks=s('clicks');
+  const imp=s('impressions'),inst=s('installs'),spend=s('spend'),rev=s('revenue');
+  return {views,likes,comments,clicks,impressions:imp,installs:inst,spend,revenue:rev,
+    ctr: imp?+(clicks/imp*100).toFixed(2):null,
+    vtr: imp?+(views/imp*100).toFixed(2):null,
+    cvr: clicks?+(inst/clicks*100).toFixed(2):null,
+    cpc: (clicks&&spend)?Math.round(spend/clicks):null,
+    cpi: (inst&&spend)?Math.round(spend/inst):null,
+    cpm: (imp&&spend)?Math.round(spend/imp*1000):null,
+    roas: (spend&&rev)?Math.round(rev/spend*100):null,
+    engagement: views?+((likes+comments)/views*100).toFixed(2):null};
+}
+
+// api() 오버라이드 — 경로별 로컬 처리, AI 생성만 서버 프록시
+const _api = api;
+api = async function(path, opts){
+  const db = loadDB();
+  const M = (opts&&opts.method)||'GET';
+  let m;
+  // ── 캠페인 목록 ──
+  if(M==='GET' && (m=path.match(/^\/api\/campaigns$/))){
+    return db.campaigns.map(c=>{
+      const cs = db.contents.filter(x=>x.campaign_id===c.id);
+      const mt = db.metrics_daily.filter(x=>x.campaign_id===c.id);
+      return {...c, content_count:cs.length, posted_count:cs.filter(x=>x.status==='posted').length,
+              total_views:mt.reduce((a,b)=>a+(+b.views||0),0)};
+    }).reverse();
+  }
+  // ── 캠페인 생성 ──
+  if(M==='POST' && (m=path.match(/^\/api\/campaigns$/))){
+    const b = JSON.parse(opts.body);
+    const c = {id:nextId(db), name:b.name||b.product_name, product_name:b.product_name,
+      description:b.description||'', category:b.category||'game', target_age:b.target_age||'20-30',
+      platforms:JSON.stringify(b.platforms||['naver']), start_date:b.start_date||'', end_date:b.end_date||'',
+      status:'active', created_at:new Date().toISOString().slice(0,19).replace('T',' ')};
+    db.campaigns.push(c); saveDB(db);
+    return {id:c.id, ok:true};
+  }
+  // ── 캠페인 상세 ──
+  if(M==='GET' && (m=path.match(/^\/api\/campaigns\/(\d+)$/))){
+    const id=+m[1];
+    const c=db.campaigns.find(x=>x.id===id); if(!c) throw new Error('404');
+    const contents=db.contents.filter(x=>x.campaign_id===id).sort((a,b)=>b.id-a.id);
+    const metrics=db.metrics_daily.filter(x=>x.campaign_id===id).sort((a,b)=>a.date<b.date?-1:1);
+    return {...c, platforms:JSON.parse(c.platforms||'[]'), contents, metrics, kpis:computeKpis(metrics)};
+  }
+  // ── 캠페인 삭제 ──
+  if(M==='DELETE' && (m=path.match(/^\/api\/campaigns\/(\d+)$/))){
+    const id=+m[1];
+    db.campaigns=db.campaigns.filter(x=>x.id!==id);
+    db.contents=db.contents.filter(x=>x.campaign_id!==id);
+    db.metrics_daily=db.metrics_daily.filter(x=>x.campaign_id!==id);
+    saveDB(db); return {ok:true};
+  }
+  // ── 콘텐츠 생성 (서버 프록시) ──
+  if(M==='POST' && (m=path.match(/^\/api\/campaigns\/(\d+)\/generate.*$/))){
+    const id=+m[1];
+    const c=db.campaigns.find(x=>x.id===id); if(!c) throw new Error('404');
+    try{
+      const r = await fetch(serverUrl()+path, {method:'POST', timeout:60000}).then(x=>x.json());
+      // 서버 성공 → 로컬 DB에도 반영
+      const q = new URLSearchParams(path.split('?')[1]||'');
+      const plat=q.get('platform')||'blog';
+      if(r.generated && r.generated[0]){
+        db.contents.push({id:nextId(db), campaign_id:id, platform:plat,
+          kind: plat.includes('youtube')||plat.includes('shorts')?'shorts':'post',
+          title:r.generated[0].title||'', body:'', status:'pending',
+          created_at:new Date().toISOString().slice(0,19).replace('T',' ')});
+        // 본문도 서버에서 가져오기
+        const det = await fetch(serverUrl()+`/api/campaigns/${id}`).then(x=>x.json());
+        const sv = det.contents.find(x=>x.title===(r.generated[0].title||''));
+        const local = db.contents[db.contents.length-1];
+        if(sv){ local.body = sv.body||''; local.title = sv.title||local.title; local.id = local.id; }
+        saveDB(db);
+      }
+      return r;
+    }catch(e){
+      throw new Error('AI 서버 연결 실패 — 로컬 서버(' + serverUrl() + ')가 켜져 있는지 확인. ' + e.message);
+    }
+  }
+  // ── 영상 생성 (서버 프록시) ──
+  if(M==='POST' && (m=path.match(/^\/api\/contents\/(\d+)\/make_video$/))){
+    try{
+      const r = await fetch(serverUrl()+path, {method:'POST', timeout:300000}).then(x=>x.json());
+      if(r.ok){
+        const cid=+m[1];
+        const c=db.contents.find(x=>x.id===cid);
+        if(c){ c.status='rendered'; c.post_url=r.video; saveDB(db); }
+      }
+      return r;
+    }catch(e){
+      throw new Error('AI 서버 연결 실패 — ' + e.message);
+    }
+  }
+  // ── 지표 등록 ──
+  if(M==='POST' && (m=path.match(/^\/api\/campaigns\/(\d+)\/metrics.*$/))){
+    const id=+m[1];
+    const q=new URLSearchParams(path.split('?')[1]);
+    const date=q.get('date')||new Date().toISOString().slice(0,10);
+    let row=db.metrics_daily.find(x=>x.campaign_id===id&&x.date===date);
+    if(!row){ row={id:nextId(db),campaign_id:id,date,views:0,likes:0,comments:0,clicks:0,impressions:0,installs:0,spend:0,revenue:0}; db.metrics_daily.push(row); }
+    for(const k of ['views','likes','comments','clicks','impressions','installs']) row[k]=(+row[k]||0)+(+q.get(k)||0);
+    for(const k of ['spend','revenue']) row[k]=(+row[k]||0)+(+q.get(k)||0);
+    saveDB(db); return {ok:true};
+  }
+  // ── 개요 ──
+  if(M==='GET' && path==='/api/stats/overview'){
+    const counts={campaigns:db.campaigns.length, contents:db.contents.length,
+      posted:db.contents.filter(x=>x.status==='posted').length,
+      pending:db.contents.filter(x=>x.status==='pending').length};
+    return {...counts, ...computeKpis(db.metrics_daily)};
+  }
+  return _api(path, opts);
+};
+
+// 서버 URL 설정 UI (상단바에 추가)
+(function(){
+  const pill = document.getElementById('enginePill');
+  if(pill){
+    pill.style.cursor='pointer';
+    pill.title='클릭해서 AI 서버 주소 변경';
+    pill.onclick=()=>{
+      const u=prompt('AI 생성 서버 주소 (글/영상 생성용. Pages에는 AI 서버가 없으니 PC 서버 주소 입력)', serverUrl());
+      if(u!==null){ localStorage.setItem(SERVER_URL_KEY, u.trim()); location.reload(); }
+    };
+  }
+  // 리셋 버튼 topbar에
+  const topbar=document.querySelector('.topbar-inner');
+  const rst=document.createElement('button');
+  rst.className='btn ghost small'; rst.textContent='초기화';
+  rst.onclick=()=>{ if(confirm('데모 데이터로 초기화할까요?')) resetDB(); };
+  rst.style.marginLeft='8px';
+  topbar.appendChild(rst);
+})();
+
+// ── KPI 렌더 헬퍼 ──
+function kpiCards(k){
+  const defs = [
+    ['ctr','CTR 클릭률','%', () => k.ctr!=null?k.ctr+'%':'—','accent'],
+    ['vtr','VTR 조회율','%', () => k.vtr!=null?k.vtr+'%':'—','green'],
+    ['cpi','CPI 설치단가','원', () => k.cpi!=null?'₩'+fmt(k.cpi):'—','purple'],
+    ['roas','ROAS','%', () => k.roas!=null?k.roas+'%':'—','yellow'],
+    ['cvr','CVR 전환율','%', () => k.cvr!=null?k.cvr+'%':'—','accent'],
+    ['cpc','CPC 클릭단가','원', () => k.cpc!=null?'₩'+fmt(k.cpc):'—','green'],
+    ['cpm','CPM 천노출비','원', () => k.cpm!=null?'₩'+fmt(k.cpm):'—','purple'],
+    ['engagement','참여율','%', () => k.engagement!=null?k.engagement+'%':'—','yellow'],
+    ['impressions','노출수','', () => fmt(k.impressions),'accent'],
+    ['installs','설치(전환)','', () => fmt(k.installs),'green'],
+    ['spend','집행 비용','원', () => '₩'+fmt(k.spend),'purple'],
+    ['revenue','발생 매출','원', () => '₩'+fmt(k.revenue),'yellow'],
+  ];
+  return defs.map(([key,label,unit,fn,cls])=>`
+    <div class="kpi ${cls}"><div class="label">${label}${unit?' ('+unit+')':''}</div>
+    <div class="value" style="font-size:22px">${fn()}</div>
+    <div class="sub">${k[key]==null?'데이터 입력 필요':key==='roas'?'목표 100% 이상':key==='ctr'?'바이럴 평균 1~3%':key==='vtr'?'숏츠 평균 5~15%':''}</div></div>`).join('');
+}
+
+// ── 대시보드 ──
+async function loadOverview(){
+  try{
+    const s = await api('/api/stats/overview');
+    kCamp.textContent = s.campaigns; kPosted.textContent = s.posted;
+    kViews.textContent = fmt(s.views); kEngage.textContent = fmt(s.likes+s.comments);
+    document.getElementById('kpiMarketing').innerHTML = kpiCards(s);
+    const camps = await api('/api/campaigns');
+    document.getElementById('recentCampaigns').innerHTML = camps.length ? camps.slice(0,5).map(c=>`
+      <div class="mrow" style="border-bottom:1px solid var(--border);padding:8px 0">
+        <div><b>#${c.id} ${esc(c.product_name)}</b> <span class="badge ${c.status}">${c.status==='active'?'진행중':c.status}</span>
+        <div style="font-size:13px;color:var(--t2)">${CAT_LABEL[c.category]||c.category} · ${c.target_age} · 발행 ${c.posted_count}/${c.content_count}</div></div>
+        <button class="btn ghost small" onclick="openCampaign(${c.id})">열기</button>
+      </div>`).join('') : '<div class="empty">아직 캠페인이 없습니다 — 새 캠페인 탭에서 만들어보세요</div>';
+    document.getElementById('enginePill').textContent = '엔진 정상 · 학습패턴 로드됨';
+    document.getElementById('enginePill').style.color='var(--green)';
+    // 패턴 정보
+    document.getElementById('patternInfo').innerHTML = `
+      <b style="color:var(--t1)">✅ 10,074건 실측 데이터 기반</b><br>
+      · <b>유튜브</b>: 체험형 후킹 조회수 1.93배 — "광고에 뜨던 X, 해봤습니다" (249만 검증)<br>
+      · <b>DC 커뮤니티</b>: 정보 모음형 성공률 3.18배 / 질문형 0.24배 실패 / 제목 15자 이내<br>
+      · <b>블로그</b>: 검색어 전방 배치 + 신뢰마커(후기·내돈내산·찐후기) 92% 포함<br>
+      · <b>제품 갤러리</b>가 게임 갤러리보다 추천 3.3배 — 브랜드 홍보에 커뮤니티 강력`;
+  }catch(e){ toast('로드 실패: '+e.message, true); }
+}
+
+// ── 캠페인 목록 ──
+async function loadCampaigns(){
+  const camps = await api('/api/campaigns');
+  document.querySelector('#campTable tbody').innerHTML = camps.map(c=>`
+    <tr>
+      <td>${c.id}</td>
+      <td><b>${esc(c.product_name)}</b><div style="font-size:12px;color:var(--t3)">${esc((c.description||'').slice(0,40))}</div></td>
+      <td>${CAT_LABEL[c.category]||c.category}</td>
+      <td>${c.target_age}</td>
+      <td style="font-size:13px">${JSON.parse(c.platforms||'[]').join(', ')}</td>
+      <td style="font-size:13px">${(c.start_date||'').slice(5)}~${(c.end_date||'').slice(5)}</td>
+      <td>${c.posted_count}/${c.content_count}</td>
+      <td><span class="badge ${c.status}">${c.status==='active'?'진행중':c.status}</span></td>
+      <td><button class="btn ghost small" onclick="openCampaign(${c.id})">상세</button></td>
+    </tr>`).join('') || '<tr><td colspan="9" class="empty">캠페인 없음</td></tr>';
+}
+
+// ── 생성 ──
+async function createCampaign(gen){
+  const name = fName.value.trim();
+  if(!name) return toast('제품명을 입력하세요', true);
+  const body = {
+    product_name: name, description: fDesc.value.trim(),
+    category: fCat.value, target_age: AGE,
+    platforms: [...PLATS], start_date: fStart.value, end_date: fEnd.value,
+  };
+  try{
+    const r = await api('/api/campaigns', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    toast('캠페인 #'+r.id+' 생성 완료');
+    if(gen){ await openCampaign(r.id, true); }
+    else { showTab('campaigns'); }
+  }catch(e){ toast('생성 실패: '+e.message, true); }
+}
+function createAndGenerate(){ createCampaign(true); }
+
+// ── 캠페인 상세 모달 ──
+async function openCampaign(cid, autoGen){
+  const c = await api('/api/campaigns/'+cid);
+  const plats = c.platforms;
+  modal.innerHTML = `
+    <div class="mrow">
+      <div><h3 style="font-size:18px">#${c.id} ${esc(c.product_name)}</h3>
+      <span class="badge ${c.status}">${c.status==='active'?'진행중':c.status}</span>
+      <span style="color:var(--t2);font-size:13px;margin-left:8px">${CAT_LABEL[c.category]} · ${c.target_age} · ${c.start_date}~${c.end_date}</span></div>
+      <button class="btn ghost small" onclick="closeModal()">닫기</button>
+    </div>
+    ${c.description?`<p style="color:var(--t2);font-size:14px;margin:8px 0">${esc(c.description)}</p>`:''}
+    <div class="section-title">콘텐츠 생성</div>
+    <div class="mrow">
+      <div class="chips">
+        ${plats.map(p=>`<div class="chip" onclick="genContent(${cid},'${p==='youtube'?'youtube':p}')">${p==='naver'?'네이버 블로그':p==='youtube'?'유튜브 숏츠':p==='dc'?'DC 커뮤니티':p}</div>`).join('')}
+      </div>
+      <div style="font-size:12px;color:var(--t3)">플랫폼을 누르면 AI가 학습패턴 기반으로 생성합니다</div>
+    </div>
+    <div class="section-title">콘텐츠 목록 (${c.contents.length})</div>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>플랫폼</th><th>제목</th><th>상태</th><th>생성일</th><th>동작</th></tr></thead>
+      <tbody>${c.contents.map(x=>`
+        <tr>
+          <td>${x.platform}</td>
+          <td style="max-width:260px"><a href="javascript:void(0)" onclick="viewContent(${cid},${x.id})">${esc((x.title||'').slice(0,40))}</a></td>
+          <td><span class="badge ${x.status}">${x.status}</span></td>
+          <td style="font-size:13px;color:var(--t2)">${(x.created_at||'').slice(5,16)}</td>
+          <td>
+            ${x.kind==='shorts'&&x.status==='pending'?`<button class="btn small" onclick="makeVideo(${x.id})">🎬 영상 생성</button>`:''}
+            ${x.status==='rendered'?`<button class="btn green small" data-video="${encodeURIComponent((x.post_url||'').split(/[\\\\/]/).pop())}" onclick="playVideo(this.dataset.video)">▶ 재생</button>`:''}
+          </td>
+        </tr>`).join('') || '<tr><td colspan="5" class="empty">아직 콘텐츠 없음 — 위 플랫폼 칩으로 생성</td></tr>'}
+      </tbody>
+    </table>
+    </div>`;
+  modalBg.style.display='flex';
+  if(autoGen && plats.length){
+    // 생성+즉시생성 모드: 첫 플랫폼으로 자동 생성
+    const p = plats.includes('naver')?'naver':plats[0];
+    genContent(cid, p==='youtube'?'youtube':p);
+  }
+}
+
+async function genContent(cid, platform){
+  toast('AI 생성 중... (최대 1분)');
+  try{
+    const r = await api(`/api/campaigns/${cid}/generate?platform=${platform}&count=1`, {method:'POST'});
+    toast('생성 완료: '+(r.generated[0]?.title||''));
+    openCampaign(cid);
+  }catch(e){ toast('생성 실패: '+e.message, true); }
+}
+
+async function makeVideo(cid){
+  toast('🎬 영상 렌더링 중... (이미지 수집+TTS+렌더, 1~3분)');
+  try{
+    const r = await api(`/api/contents/${cid}/make_video`, {method:'POST'});
+    toast(`영상 완성! ${r.duration.toFixed(1)}초`);
+    playVideo(r.video);
+  }catch(e){ toast('영상 생성 실패: '+e.message, true); }
+}
+
+function playVideo(path){
+  modal.innerHTML = `<div class="mrow"><h3>🎬 생성된 숏츠</h3><button class="btn ghost small" onclick="closeModal()">닫기</button></div>
+  <video controls autoplay src="/videos/${encodeURIComponent(path.split(/[\\\\/]/).pop())}"></video>
+  <p style="font-size:13px;color:var(--t2);margin-top:8px">파일: ${esc(path)}</p>`;
+  modalBg.style.display='flex';
+}
+
+async function viewContent(cid, xid){
+  const c = await api('/api/campaigns/'+cid);
+  const x = c.contents.find(v=>v.id===xid);
+  if(!x) return;
+  modal.innerHTML = `<div class="mrow"><h3>📄 ${esc(x.platform)} 콘텐츠 #${x.id}</h3><button class="btn ghost small" onclick="closeModal()">닫기</button></div>
+    <div style="white-space:pre-wrap;font-size:14px;line-height:1.7;background:var(--surface2);border-radius:10px;padding:14px;max-height:55vh;overflow-y:auto">${esc(x.body)}</div>`;
+  modalBg.style.display='flex';
+}
+
+// ── 지표 ──
+async function loadCampSelect(){
+  const camps = await api('/api/campaigns');
+  const sel = mCampSel;
+  sel.innerHTML = '<option value="">캠페인 선택</option>' + camps.map(c=>`<option value="${c.id}">#${c.id} ${esc(c.product_name)}</option>`).join('');
+}
+
+async function loadMetrics(){
+  const cid = mCampSel.value;
+  if(!cid){ mViews.textContent=mLikes.textContent=mComments.textContent=mClicks.textContent='0';
+    document.getElementById('mKpiMarketing').innerHTML='';
+    metricsChart.innerHTML='<div class="empty" style="margin:auto">캠페인을 선택하세요</div>'; return; }
+  const c = await api('/api/campaigns/'+cid);
+  const m = c.metrics;
+  const sum = k => m.reduce((a,b)=>a+(b[k]||0),0);
+  mViews.textContent = fmt(sum('views')); mLikes.textContent = fmt(sum('likes'));
+  mComments.textContent = fmt(sum('comments')); mClicks.textContent = fmt(sum('clicks'));
+  document.getElementById('mKpiMarketing').innerHTML = kpiCards(c.kpis);
+  // 최근 14일 바 차트
+  const days = [...Array(14)].map((_,i)=>{const d=new Date(Date.now()-(13-i)*864e5);return d.toISOString().slice(0,10)});
+  const byDate = Object.fromEntries(m.map(x=>[x.date, x.views||0]));
+  const max = Math.max(1, ...days.map(d=>byDate[d]||0));
+  metricsChart.innerHTML = days.map(d=>{
+    const v = byDate[d]||0, h = Math.round(v/max*190);
+    return `<div title="${d}: ${fmt(v)}" style="flex:1;min-width:26px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:220px">
+      <div style="font-size:10px;color:var(--t3);margin-bottom:2px">${v?fmt(v):''}</div>
+      <div style="width:70%;background:linear-gradient(180deg,var(--accent),rgba(88,166,255,.4));border-radius:4px 4px 0 0;height:${Math.max(h,v?4:1)}px"></div>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px">${d.slice(8)}</div>
+    </div>`;
+  }).join('');
+}
+
+async function submitMetrics(){
+  const cid = mCampSel.value;
+  if(!cid) return toast('캠페인을 선택하세요', true);
+  try{
+    const q = `date=${mDate.value}&views=${+mV.value}&likes=${+mL.value}&comments=${+mC.value}` +
+              `&clicks=${+mClick.value}&impressions=${+mImp.value}&installs=${+mInst.value}` +
+              `&spend=${+mSpend.value}&revenue=${+mRev.value}`;
+    await api(`/api/campaigns/${cid}/metrics?${q}`, {method:'POST'});
+    toast('지표 등록 완료'); loadMetrics();
+  }catch(e){ toast('등록 실패: '+e.message, true); }
+}
+
+// ── 유틸 ──
+function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+function fmt(n){ n=+n||0; return n>=10000?(n/10000).toFixed(1).replace('.0','')+'만':n.toLocaleString() }
+function toast(msg, err){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = err?'err':''; t.style.display='block';
+  clearTimeout(t._h); t._h = setTimeout(()=>t.style.display='none', 3000);
+}
+function closeModal(){ modalBg.style.display='none'; }
+const modal = document.getElementById('modal'), modalBg = document.getElementById('modalBg');
+
+showTab('dashboard');
+</script>
+</body>
+</html>
