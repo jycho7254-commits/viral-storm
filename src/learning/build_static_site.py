@@ -189,6 +189,21 @@ api = async function(path, opts){
   rst.style.marginLeft='8px';
   topbar.appendChild(rst);
 })();
+
+// playVideo 오버라이드 — Pages에선 로컬 서버의 /videos/ 사용
+playVideo = function(path){
+  let src;
+  if(path && path.startsWith('http')){
+    src = path; // 절대 URL 그대로
+  } else {
+    const fname = (path||'').split(/[\\\\/]/).pop();
+    src = serverUrl().replace(/\\/$/,'') + '/videos/' + encodeURIComponent(fname);
+  }
+  modal.innerHTML = `<div class="mrow"><h3>🎬 생성된 숏츠</h3><button class="btn ghost small" onclick="closeModal()">닫기</button></div>
+  <video controls autoplay src="${src}"></video>
+  <p style="font-size:13px;color:var(--t2);margin-top:8px">재생이 안 되면 상단 엔진 표시를 클릭해 서버 주소를 확인하세요 (${serverUrl()})</p>`;
+  modalBg.style.display='flex';
+};
 """
 
 seed_json = json.dumps(seed, ensure_ascii=False)

@@ -27,14 +27,49 @@ F = r"C\:/Windows/Fonts"  # ffmpeg escape용 폰트 디렉토리
 
 
 def tts(text: str, out_mp3: str, voice: str = "female", rate: str = "+8%", pitch: str = "+2Hz") -> str:
+    """edge-tts 한국어 — 문장별 속도/피치 변조 + 자연 쉼 (mp3 세그먼트 concat)
+    기계적 균일 톤 제거용.
+    """
     import edge_tts
+    import asyncio
+    import random as _r
     v = VOICES.get(voice, VOICES["female"])
 
-    async def _run():
-        c = edge_tts.Communicate(text, v, rate=rate, pitch=pitch)
-        await c.save(out_mp3)
+    sentences = [s.strip() for s in text.replace("!", "!.").replace("?", "?.").split(".") if s.strip()]
+    if not sentences:
+        sentences = [text]
 
-    asyncio.run(_run())
+    async def _gen_one(s, r, p, path):
+        c = edge_tts.Communicate(s, v, rate=r, pitch=p)
+        await c.save(path)
+
+    rng = _r.Random(hash(text) & 0xFFFF)
+    tmp_dir = Path(out_mp3).parent / "tts_parts"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+
+    async def _run():
+        segs = []
+        for i, s in enumerate(sentences[:8]):  # 최대 8문장
+            r = rng.choice(["+4%", "+7%", "+9%", "+11%"])
+            p = rng.choice(["+0Hz", "+2Hz", "+3Hz", "-1Hz"])
+            seg = tmp_dir / f"part_{i}.mp3"
+            await _gen_one(s, r, p, str(seg))
+            segs.append(seg)
+        return segs
+
+    segs = asyncio.run(_run())
+
+    if len(segs) == 1:
+        import shutil
+        shutil.copy(str(segs[0]), out_mp3)
+    else:
+        # mp3 concat — 같은 코덱/샘플레이트라 스트림 병합 가능
+        list_file = tmp_dir / "list.txt"
+        list_file.write_text("".join(f"file '{s}'\n" for s in segs), encoding="utf-8")
+        subprocess.run(
+            [FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", str(list_file), "-c", "copy", out_mp3],
+            capture_output=True,
+        )
     return out_mp3
 
 
@@ -151,10 +186,14 @@ def build_short(title, script_lines, image_paths, out_path, voice="female", bgm_
         ]
         kb = zoom_dirs[i % 4]
         frames = int(seg_dur * 30) + 30  # 30fps 기준 총 프레임
+        # 이미지 튀어나감 방지: 2배 업스케일 → 중앙 크롭 → 줌/팬 (줌 아웃 없음, 최소 1.0)
+        # x/y를 클램프로 프레임 내 고정 — 바깥 참조 금지
         parts.append(
-            f"[{i}:v]scale=1080:1920:force_original_aspect_ratio=increase,"
-            f"crop=1080:1920,"
-            f"zoompan={kb}:d={frames}:s=1080x1920:fps=30,"
+            f"[{i}:v]scale=2160:3840:force_original_aspect_ratio=increase,"
+            f"crop=2160:3840,"
+            f"zoompan=z='max(1.0\\,min(zoom+0.0008\\,1.10))':"
+            f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
+            f"d={frames}:s=1080x1920:fps=30,"
             f"setsar=1[v{i}]"
         )
     xfade_parts = []
