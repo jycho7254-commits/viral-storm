@@ -81,8 +81,37 @@ def init_db():
         UNIQUE (campaign_id, date)
     );
     """)
+    # 마이그레이션 — 기존 DB에 마케팅 지표 컬럼 추가 (08-19)
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(metrics_daily)")}
+    for col, ddl in [
+        ("impressions", "INTEGER DEFAULT 0"),  # 노출
+        ("installs", "INTEGER DEFAULT 0"),     # 설치
+        ("spend", "REAL DEFAULT 0"),           # 집행 비용(원)
+        ("revenue", "REAL DEFAULT 0"),         # 발생 매출(원)
+    ]:
+        if col not in cols:
+            conn.execute(f"ALTER TABLE metrics_daily ADD COLUMN {col} {ddl}")
     conn.commit()
     conn.close()
+
+
+def compute_kpis(rows: list) -> dict:
+    """일별 지표 행들 → 마케팅 KPI 파생 계산"""
+    s = lambda k: sum((r.get(k) or 0) for r in rows)
+    views, likes, comments, clicks = s("views"), s("likes"), s("comments"), s("clicks")
+    imp, inst, spend, rev = s("impressions"), s("installs"), s("spend"), s("revenue")
+    return {
+        "views": views, "likes": likes, "comments": comments, "clicks": clicks,
+        "impressions": imp, "installs": inst, "spend": spend, "revenue": rev,
+        "ctr": round(clicks / imp * 100, 2) if imp else None,          # 클릭률
+        "vtr": round(views / imp * 100, 2) if imp else None,           # 조회율(영상)
+        "cvr": round(inst / clicks * 100, 2) if clicks else None,      # 전환율(클릭→설치)
+        "cpc": round(spend / clicks, 0) if clicks and spend else None, # 클릭당 비용
+        "cpi": round(spend / inst, 0) if inst and spend else None,     # 설치당 비용
+        "cpm": round(spend / imp * 1000, 0) if imp and spend else None,# 천 노출 비용
+        "roas": round(rev / spend * 100, 0) if spend and rev else None,# 광고수익률 %
+        "engagement": round((likes + comments) / views * 100, 2) if views else None,  # 참여율
+    }
 
 
 init_db()
@@ -148,6 +177,7 @@ def get_campaign(cid: int):
     d["platforms"] = json.loads(d["platforms"] or "[]")
     d["contents"] = [dict(x) for x in contents]
     d["metrics"] = [dict(x) for x in metrics]
+    d["kpis"] = compute_kpis(d["metrics"])  # 마케팅 KPI 파생
     return d
 
 
@@ -260,14 +290,17 @@ def make_video(content_id: int):
 # ── 지표 ─────────────────────────────────────
 
 @app.post("/api/campaigns/{cid}/metrics")
-def add_metrics(cid: int, date: str, views: int = 0, likes: int = 0, comments: int = 0, clicks: int = 0):
+def add_metrics(cid: int, date: str, views: int = 0, likes: int = 0, comments: int = 0, clicks: int = 0,
+                impressions: int = 0, installs: int = 0, spend: float = 0, revenue: float = 0):
     conn = db()
-    conn.execute("""INSERT INTO metrics_daily (campaign_id, date, views, likes, comments, clicks)
-                    VALUES (?,?,?,?,?,?)
+    conn.execute("""INSERT INTO metrics_daily (campaign_id, date, views, likes, comments, clicks, impressions, installs, spend, revenue)
+                    VALUES (?,?,?,?,?,?,?,?,?,?)
                     ON CONFLICT (campaign_id, date)
                     DO UPDATE SET views=views+excluded.views, likes=likes+excluded.likes,
-                                  comments=comments+excluded.comments, clicks=clicks+excluded.clicks""",
-                 (cid, date, views, likes, comments, clicks))
+                                  comments=comments+excluded.comments, clicks=clicks+excluded.clicks,
+                                  impressions=impressions+excluded.impressions, installs=installs+excluded.installs,
+                                  spend=spend+excluded.spend, revenue=revenue+excluded.revenue""",
+                 (cid, date, views, likes, comments, clicks, impressions, installs, spend, revenue))
     conn.commit()
     conn.close()
     return {"ok": True}
@@ -276,18 +309,18 @@ def add_metrics(cid: int, date: str, views: int = 0, likes: int = 0, comments: i
 @app.get("/api/stats/overview")
 def stats_overview():
     conn = db()
-    r = conn.execute("""
+    rows = conn.execute("SELECT * FROM metrics_daily").fetchall()
+    counts = conn.execute("""
         SELECT
           (SELECT COUNT(*) FROM campaigns) as campaigns,
           (SELECT COUNT(*) FROM contents) as contents,
           (SELECT COUNT(*) FROM contents WHERE status='posted') as posted,
-          (SELECT COUNT(*) FROM contents WHERE status='pending') as pending,
-          (SELECT COALESCE(SUM(views),0) FROM metrics_daily) as views,
-          (SELECT COALESCE(SUM(likes),0) FROM metrics_daily) as likes,
-          (SELECT COALESCE(SUM(comments),0) FROM metrics_daily) as comments
+          (SELECT COUNT(*) FROM contents WHERE status='pending') as pending
     """).fetchone()
     conn.close()
-    return dict(r)
+    d = dict(counts)
+    d.update(compute_kpis([dict(r) for r in rows]))
+    return d
 
 
 # ── 프론트 ─────────────────────────────────────
