@@ -1,439 +1,846 @@
 {
   "meta": {
     "generated": "2026-08-19",
+    "analysis_pass": 2,
     "source_corpus": "corpus_youtube.json",
-    "source_supplement": "learning_summary.json#yt_top50",
-    "corpus_size_raw": 240,
-    "corpus_size_dedup": 237,
-    "views_range": [
-      2,
-      3879622
-    ],
-    "top_vs_bottom_quartile_flags": {
-      "first_person": {
-        "top_share": 0.034,
-        "bottom_share": 0.0,
-        "avg_views_when_present": 797010,
-        "count": 6
+    "corpus_size": 10335,
+    "corpus_size_views_available": 10269,
+    "queries": 904,
+    "overall": {
+      "avg_views": 205805,
+      "median_views": 28006,
+      "views_range": [
+        1,
+        17496088
+      ]
+    },
+    "views_dist_logscale": {
+      "<1K": 1761,
+      "1K-10K": 1933,
+      "10K-100K": 3548,
+      "100K-1M": 2573,
+      "1M+": 454,
+      "note": "10K-100K가 34.6% 최다. 롱테일: 1M+는 4.4%뿐 — 승자독식 분포"
+    },
+    "top10pct_vs_bottom10pct_flags": {
+      "top_share": {
+        "question": 0.221,
+        "vs": 0.029,
+        "first_person": 0.043,
+        "experience_verb": 0.048,
+        "slang": 0.076,
+        "neg_emotion": 0.056,
+        "superlative": 0.061,
+        "has_digit": 0.53,
+        "ad_ref": 0.018,
+        "bracket": 0.16,
+        "emoji": 0.172,
+        "exclam": 0.277,
+        "is_korean": 0.679,
+        "listy": 0.136,
+        "money_ref": 0.062,
+        "series_ref": 0.047,
+        "eng_sub": 0.013
       },
-      "experience_verb": {
-        "top_share": 0.068,
-        "bottom_share": 0.051,
-        "avg_views_when_present": 652053,
-        "count": 9
+      "bottom_share": {
+        "question": 0.04,
+        "vs": 0.009,
+        "first_person": 0.062,
+        "experience_verb": 0.066,
+        "slang": 0.045,
+        "neg_emotion": 0.075,
+        "superlative": 0.154,
+        "has_digit": 0.684,
+        "ad_ref": 0.008,
+        "bracket": 0.104,
+        "emoji": 0.067,
+        "exclam": 0.378,
+        "is_korean": 0.922,
+        "listy": 0.474,
+        "money_ref": 0.008,
+        "series_ref": 0.008,
+        "eng_sub": 0.002
       },
-      "ad_ref": {
-        "top_share": 0.051,
-        "bottom_share": 0.085,
-        "avg_views_when_present": 291309,
-        "count": 14
-      },
-      "question": {
-        "top_share": 0.119,
-        "bottom_share": 0.119,
-        "avg_views_when_present": 339187,
-        "count": 26
-      },
-      "vs": {
-        "top_share": 0.034,
-        "bottom_share": 0.0,
-        "avg_views_when_present": 680808,
-        "count": 5
-      },
-      "has_digit": {
-        "top_share": 0.407,
-        "bottom_share": 0.441,
-        "avg_views_when_present": 246709,
-        "count": 111
-      },
-      "slang": {
-        "top_share": 0.169,
-        "bottom_share": 0.051,
-        "avg_views_when_present": 571031,
-        "count": 20
-      },
-      "neg_emotion": {
-        "top_share": 0.136,
-        "bottom_share": 0.0,
-        "avg_views_when_present": 1078604,
-        "count": 8
-      },
-      "superlative": {
-        "top_share": 0.102,
-        "bottom_share": 0.068,
-        "avg_views_when_present": 379575,
-        "count": 16
-      },
-      "is_korean": {
-        "top_share": 0.678,
-        "bottom_share": 0.746,
-        "avg_views_when_present": 301362,
-        "count": 159
+      "key_gaps": {
+        "question(+0.181)": "상위 22.1% vs 하위 4.0% — 최대 격차. 질문형이 2차 최대 발견",
+        "listy(-0.342)": "하위 48.5% vs 상위 14.3% — 'Top N/모음/순위' 리스트형은 하위 신호로 반전",
+        "is_korean(-0.243)": "하위 92.2% 한글 vs 상위 67.9% — 짧은 한글 키워드 나열형이 하위 대량 포진",
+        "has_digit(-0.155)": "숫자 남발은 하위 신호(단 금액 '만원/억'은 별도 강신호 med 2.3×)",
+        "emoji(+0.104)": "상위 17.1% vs 하위 6.7%, 이모지 有 med 48,300 vs 無 23,771 — 2배",
+        "bracket(+0.055)": "[브랜드/ENG] 마커는 상위 우위"
       }
     },
     "title_len": {
-      "top25_avg": 47.7,
-      "bottom25_avg": 52.0,
-      "overall_avg": 52.2
+      "top10pct_avg": 53.5,
+      "bottom10pct_avg": 39.6,
+      "overall_avg": 55.2,
+      "median_views_by_bucket": {
+        "0-10": {
+          "n": 45,
+          "median_views": 14666
+        },
+        "10-20": {
+          "n": 428,
+          "median_views": 14668
+        },
+        "20-30": {
+          "n": 1168,
+          "median_views": 12968
+        },
+        "30-40": {
+          "n": 1874,
+          "median_views": 17127
+        },
+        "40-50": {
+          "n": 1668,
+          "median_views": 26481
+        },
+        "50-60": {
+          "n": 1229,
+          "median_views": 33719
+        },
+        "60-70": {
+          "n": 883,
+          "median_views": 38564
+        },
+        "70-80": {
+          "n": 648,
+          "median_views": 35567
+        }
+      },
+      "spearman_len_vs_views": 0.1537,
+      "spearman_len_vs_log10views": 0.1537,
+      "note": "상관 +0.15 약양성. 40-70자 구간 med 상승. 1차 '짧게(48자)' 결론 정정: 하위 10% 평균이 39.6자로 오히려 짧음 — 짧은 키워드 나열형=소형채널 SEO. 단 ≤10자 초단어는 채널 파워 있을 때 최강(avg 4.1×)"
     },
-    "experience_hook": {
-      "share_in_corpus": 0.059,
-      "avg_views": 611260,
-      "lift_vs_overall": 1.93
-    }
+    "language": {
+      "korean_share": 0.693,
+      "korean_median_views": 18515,
+      "non_korean_median_views": 50918,
+      "note": "1차 '한국어 필수' 결론 정정: 비한글 제목 med가 2.7× 높음. 단 교란 변수 — 대형/글로벌 채널 + [ENG] 자막 전략. 신규 소형 채널은 한글+영어자막 병행이 정답"
+    },
+    "first_pass_overturned": [
+      "1차 '숨은 꿀정보(은근/모르는/꿀팁)' → 무신호 (med 0.85-1.04)",
+      "1차 '장기대량검증 N곳 중 베스트 M' → 안티 (med 80뷰)",
+      "1차 '인생 보증형' → 안티 (med 리프트 0.08)",
+      "1차 '짧은 제목(48자) 선호' → 정정 (하위 10%가 더 짧음 39.6자)",
+      "1차 '영어 제목 지양' → 정정 (비한글 med 2.7×, [ENG] 자막 7.6×)",
+      "1차 '감정어(neg_emotion) 강함' → 정정 (하위에서 더 많음 — 분노 저품질 마케팅과 혼동된 것)"
+    ]
   },
   "title_formulas": [
     {
       "id": "F1",
       "name": "광고분노 → 직접 체험형",
-      "template": "광고에 ㅈㄴ 뜨던 {대상}, 개빡쳐서 {행동}봤습니다",
-      "mechanism": "광고 과노출로 공감된 불만을 행동(직접 해보기)으로 전환. 분노+체험 2단 후킹. 신뢰성(광고 아님)과 호기심(결과 궁금) 동시 충족",
+      "template_hint": "광고분노 → 직접 체험형",
+      "mechanism": "광고 과노출 공감을 분노→행동 전환으로. 대량 데이터에서도 유의: 광고+체험 결합 n=12, 평균 리프트 2.6×",
       "best_for": [
         "game",
         "product"
       ],
+      "status": "verified",
+      "stats": {
+        "n": 12,
+        "avg_views": 529042,
+        "median_views": 37448,
+        "lift_avg": 2.57,
+        "lift_med": 1.34
+      },
       "evidence": {
-        "example": "광고에 ㅈㄴ 뜨던 게임, 개빡쳐서 깔아봤습니다",
+        "best_example": "광고에 ㅈㄴ 뜨던 게임, 개빡쳐서 깔아봤습니다",
         "views": 2492598,
-        "search_query": "모바일 게임 리뷰"
+        "query": "모바일 게임 리뷰"
       }
     },
     {
       "id": "F2",
       "name": "직접 검증형 (A vs B)",
-      "template": "{A} vs {B}, 직접 {행동}봤습니다! 과연 {의문}?",
-      "mechanism": "vs 구조로 비교 호기심 + 직접 체험으로 신뢰 + 마지막 의문문으로 클릭 유도",
+      "template_hint": "직접 검증형 (A vs B)",
+      "mechanism": "vs 비교 + 직접 체험의 조합. n=8, avg 리프트 2.1× / med 리프트 2.6×",
       "best_for": [
         "product",
-        "game"
+        "game",
+        "food"
       ],
+      "status": "verified",
+      "stats": {
+        "n": 12,
+        "avg_views": 305750,
+        "median_views": 80262,
+        "lift_avg": 1.49,
+        "lift_med": 2.87
+      },
       "evidence": {
-        "example": "현지 정품 vs 면세점 마오타이, 직접 마셔 봤습니다! 과연 면세점은 정품일까?",
+        "best_example": "현지 정품 vs 면세점 마오타이, 직접 마셔 봤습니다! 과연 면세점은 정품일까?",
         "views": 2092903,
-        "search_query": "정품 리뷰"
+        "query": "정품 리뷰"
       }
     },
     {
       "id": "F3",
       "name": "구체적 금액 + 의문형",
-      "template": "{금액}짜리 {대상}.. 이게 맞나요?",
-      "mechanism": "숫자의 구체성이 진정성을 만들고, 의문문 반박이 궁금증 유발",
+      "template_hint": "구체적 금액 + 의문형",
+      "mechanism": "금액 숫자의 구체성 = 진정성. n=294 대량 검증에서 med 리프트 2.3× 유지. 단순 숫자 나열과 달리 금액은 강신호",
       "best_for": [
-        "etc_experience",
-        "product"
+        "product",
+        "food",
+        "travel_place"
       ],
+      "status": "verified",
+      "stats": {
+        "n": 290,
+        "avg_views": 313030,
+        "median_views": 64273,
+        "lift_avg": 1.52,
+        "lift_med": 2.29
+      },
       "evidence": {
-        "example": "100만원짜리 일본 패키지 여행.. 이게 맞나요?",
-        "views": 1786561,
-        "search_query": "여행 후기"
+        "best_example": "\"붓 있길래 낙서\"…5억 그림에 페인트 칠한 20대 남녀 / SBS",
+        "views": 6228069,
+        "query": "전시회 실패"
       }
     },
     {
       "id": "F4",
       "name": "감탄 슬랭 오프닝형",
-      "template": "소재 미쳤다... / ㄹㅇ 개 {수식어} {대상}",
-      "mechanism": "초반 3초에 감정 단어(미쳤다/ㄹㅇ/개) 배치. 신세대 인터넷 언어로 거리감 제거",
+      "template_hint": "감탄 슬랭 오프닝형",
+      "mechanism": "제목 첫머리 감정 폭발. n=67, avg 리프트 2.2× / med 리프트 2.5×. '미쳤' med 리프트 4.0×",
       "best_for": [
         "game",
-        "site"
+        "product",
+        "etc"
       ],
+      "status": "verified",
+      "stats": {
+        "n": 74,
+        "avg_views": 453632,
+        "median_views": 73442,
+        "lift_avg": 2.2,
+        "lift_med": 2.62
+      },
       "evidence": {
-        "example": "ㄹㅇ 개 쓸데없는 사이트 모음",
-        "views": 1387913,
-        "search_query": "유용한 사이트"
+        "best_example": "와 뜨거워",
+        "views": 14824183,
+        "query": "찜질방 꿀팁"
       }
     },
     {
       "id": "F5",
-      "name": "숨은 꿀정보형",
-      "template": "{타깃}이 은근히 모르는 개꿀 {대상}",
-      "mechanism": "'은근히 모르는'으로 정보 우월감 + 타깃 명시로 해당 시청자의 자기 식별 유도",
+      "name": "공감 유형학형 (유형 카탈로그)",
+      "template_hint": "공감 유형학형 (유형 카탈로그)",
+      "mechanism": "1차 '숨은 꿀정보형'의 대체. '~하면 꼭 있는 유형'은 자기 식별 → 공감 폭발. n=9 소표본이나 avg 170만(8.2×), TOP40 다수 ('찜질방 가면 꼭 있는 유형' 1,478만)",
       "best_for": [
-        "site",
-        "product"
+        "travel_place",
+        "food",
+        "game"
       ],
+      "status": "new",
+      "stats": {
+        "n": 8,
+        "avg_views": 1910646,
+        "median_views": 94820,
+        "lift_avg": 9.28,
+        "lift_med": 3.39
+      },
       "evidence": {
-        "example": "대학생들이 은근히 모르는 과제 개꿀 사이트  | 연고티비",
-        "views": 754755,
-        "search_query": "유용한 사이트"
+        "best_example": "찜질방 가면 꼭 있는 유형ㅋㅋㅋ (베개젠가,푸드파이터형 등등)",
+        "views": 14781422,
+        "query": "찜질방 꿀팁"
       }
     },
     {
       "id": "F6",
-      "name": "장기 대량 검증 → 축약형",
-      "template": "{기간} 동안 {경험한 N}개 중 베스트 {M}",
-      "mechanism": "장기간+대량(N)이 노력의 증거, 좁힌 숫자(M)가 결과의 확신. N→M 축소 구조가 '엄선' 느낌",
+      "name": "하우투 명령형",
+      "template_hint": "하우투 명령형",
+      "mechanism": "'이렇게 만들어 보세요' 식 즉시 실행 가능성 약속. n=219, avg 1.6× / med 1.5×. 레시피/실무 카테고리 강자",
       "best_for": [
-        "etc_experience",
-        "product",
-        "clothing"
+        "food",
+        "site_app",
+        "beauty"
       ],
+      "status": "new",
+      "stats": {
+        "n": 139,
+        "avg_views": 309354,
+        "median_views": 41095,
+        "lift_avg": 1.5,
+        "lift_med": 1.47
+      },
       "evidence": {
-        "example": "2년 동안 가봤던 서울 맛집 107곳 중 베스트 11",
-        "views": 592891,
-        "search_query": "맛집 추천"
+        "best_example": "콩나물과 어묵을 이렇게 드세요! 아삭쫄깃 영양가득 어묵 요리👍💯",
+        "views": 7083566,
+        "query": "반찬 추천"
       }
     },
     {
       "id": "F7",
-      "name": "전문가/내부자 입장형",
-      "template": "{전문가/내부자}가 {행동}하는 {대상}",
-      "mechanism": "내부자 시점이 희소성과 신뢰를 동시에 제공 (스타일리스트/회사 직원/대표)",
+      "name": "경고/손실 회피형",
+      "template_hint": "경고/손실 회피형",
+      "mechanism": "'돈 버리기 전에 보세요' 손실 회심리. '주의' med 리프트 2.4×, n=125 avg 1.4×/med 1.7×",
       "best_for": [
-        "clothing",
-        "product"
+        "product",
+        "site_app"
       ],
+      "status": "new",
+      "stats": {
+        "n": 172,
+        "avg_views": 244767,
+        "median_views": 33442,
+        "lift_avg": 1.19,
+        "lift_med": 1.19
+      },
       "evidence": {
-        "example": "10분만에 스타일리스트가 '패션꼼수' 예쁘게 입는 법 알려드릴게요. [현실 꿀팁 총정리]",
-        "views": 1150591,
-        "search_query": "코디 팁"
+        "best_example": "진작 이렇게 먹을걸! 지금까지 헛 돈 많이 썼네요~전기밥솥에 우유 2통을 넣었더니 예전에 엄마가 해주시던 맛이 나요👍👍수제요거트, 그릭요거트, 전기밥솥 요거트만들",
+        "views": 7267666,
+        "query": "전기밥솥 실패"
       }
     },
     {
       "id": "F8",
       "name": "광고 아님 표방형",
-      "template": "(광고❌) 써본 중에 최고! / {대상} Haul & Review (Not an Ad)",
-      "mechanism": "광고 혐오 시대, '광고 아님'을 명시하는 것 자체가 역설적 훅. 찐 후기 포지셔닝",
+      "template_hint": "광고 아님 표방형",
+      "mechanism": "역설적 훅 — '광고 아님' 명시가 찐 후기 신호. n=133, med 리프트 2.8× (avg는 1.0× — 승자독식 분포)",
       "best_for": [
         "product",
         "game"
       ],
+      "status": "verified",
+      "stats": {
+        "n": 133,
+        "avg_views": 196642,
+        "median_views": 78706,
+        "lift_avg": 0.96,
+        "lift_med": 2.81
+      },
       "evidence": {
-        "example": "Temu Haul & Unboxing Review(Not an Ad)",
+        "best_example": "Temu Haul & Unboxing Review(Not an Ad)",
         "views": 3103358,
-        "search_query": "제품 리뷰 언박싱"
+        "query": "제품 리뷰 언박싱"
       }
     },
     {
       "id": "F9",
       "name": "사건 서사형 ('~하다 생긴 일')",
-      "template": "{행동}하다 {예상치 못한 결과가} 생긴 일",
-      "mechanism": "서사 기대감: 평범한 행동 뒤 예상 밖 사건을 암시해 결말 궁금증 유발",
+      "template_hint": "사건 서사형 ('~하다 생긴 일')",
+      "mechanism": "평범한 행동 뒤 예상 밖 사건 예고. 대량 코퍼스에서 표본 1건(112만) — 희소하지만 유효. '반전/사연/충격' 확장판은 n=54 avg 1.6×",
       "best_for": [
         "product",
-        "etc_experience"
+        "etc"
       ],
+      "status": "weak",
+      "stats": {
+        "n": 1,
+        "avg_views": 1119418,
+        "median_views": 1119418,
+        "lift_avg": 5.44,
+        "lift_med": 39.97
+      },
       "evidence": {
-        "example": "얼죽아 필수품 스탠리 텀블러. 싸게 사려다가 돈만 날린다?! 정품 vs 짝퉁 비교하다 생긴일.",
+        "best_example": "얼죽아 필수품 스탠리 텀블러. 싸게 사려다가 돈만 날린다?! 정품 vs 짝퉁 비교하다 생긴일.",
         "views": 1119418,
-        "search_query": "정품 리뷰"
+        "query": "정품 리뷰"
       }
     },
     {
       "id": "F10",
-      "name": "인생 보증형 + 숫자 리스트",
-      "template": "죽기 전에 꼭 {행동}할 인생{대상} 베스트 {N}",
-      "mechanism": "'인생' 수식어가 강도를 극대화하고 리스트 숫자가 정보량을 약속",
+      "name": "질문 미해결형 (?)",
+      "template_hint": "질문 미해결형 (?)",
+      "mechanism": "2차 최대 발견: 상위 10% 질문형 22.1% vs 하위 10% 4.0% (5.5배 격차). n=1,741, med 리프트 1.7×. 결론을 물음으로 남겨야 클릭",
       "best_for": [
-        "etc_experience",
-        "product"
+        "all"
       ],
+      "status": "new_strong",
+      "stats": {
+        "n": 1741,
+        "avg_views": 227163,
+        "median_views": 48852,
+        "lift_avg": 1.1,
+        "lift_med": 1.74
+      },
       "evidence": {
-        "example": "죽기 전에 꼭 가봐야 할 인생맛집 베스트 38",
-        "views": 908214,
-        "search_query": "맛집 추천"
+        "best_example": "🎉200만 구독자 특집이 되어버린 에버랜드 2탄!! 🎉 역대급 초과근무에 파업 선언 릴레이?! (feat. 뒤늦은 골드버튼 언박싱)ㅣ워크맨 ep.18",
+        "views": 15387858,
+        "query": "놀이공원 언박싱"
       }
     },
     {
       "id": "F11",
-      "name": "공감 반전 꿀팁형",
-      "template": "{공감되는 고민} 있을때 {현실 꿀팁}",
-      "mechanism": "누구나 공감하는 고민 제시 → 현실적 해법 제시. 공감이 클릭을 만듦",
+      "name": "대공개/공개형",
+      "template_hint": "대공개/공개형",
+      "mechanism": "'~를 공개합니다' 정보 개봉 서사. n=108, avg 2.0× / med 2.9×. '대공개'는 3.8×",
       "best_for": [
-        "game",
-        "clothing"
+        "travel_place",
+        "game"
       ],
+      "status": "new",
+      "stats": {
+        "n": 108,
+        "avg_views": 403361,
+        "median_views": 80462,
+        "lift_avg": 1.96,
+        "lift_med": 2.87
+      },
       "evidence": {
-        "example": "새학기 학교 가기 싫을때 안 가는 꿀팁?ㅋㅋㅋㅋ",
-        "views": 1032979,
-        "search_query": "이 게임 꿀팁"
+        "best_example": "\"물 때가 뭐죠?\" 보기만 해도 시원한 워터파크 청소 시간 대공개 / 비디오머그",
+        "views": 8700110,
+        "query": "워터파크 실패"
       }
     },
     {
       "id": "F12",
-      "name": "기간 후기 디테일형",
-      "template": "{N}일/년 후기 — 여기서 갈립니다",
-      "mechanism": "구체적 기간이 신뢰를, '갈린다'는 분기 판정 욕구를 자극",
+      "name": "시리즈화 (ep/Part/N탄)",
+      "template_hint": "시리즈화 (ep/Part/N탄)",
+      "mechanism": "n=171, avg 리프트 3.5× — 워크맨ep 등 대형 채널의 구독 록인 장치. 검색 유입보다 시리즈 팬 유입. 신규 채널은 1탄/2탄 구조로 설계",
       "best_for": [
-        "site",
+        "etc",
+        "travel_place",
         "game"
       ],
+      "status": "new",
+      "stats": {
+        "n": 209,
+        "avg_views": 611291,
+        "median_views": 53453,
+        "lift_avg": 2.97,
+        "lift_med": 1.91
+      },
       "evidence": {
-        "example": "요즘 쇼츠는 여기서 갈립니다 (150일 후기)",
-        "views": 32348,
-        "search_query": "게임 추천 숏츠"
+        "best_example": "TOP 250 FUNNIEST FAILS IN BRAWL STARS (Part 2)",
+        "views": 16528998,
+        "query": "브롤스타즈 best"
       }
+    },
+    {
+      "id": "F13",
+      "name": "글로벌 자막 진출형 ([ENG])",
+      "template_hint": "글로벌 자막 진출형 ([ENG])",
+      "mechanism": "n=36, avg 리프트 6.4× / med 리프트 7.6× — 국내 콘텐츠 + 영어 자막 = 글로벌 시장 진입. 1차 '영어 제목 금지' 결론의 정정축",
+      "best_for": [
+        "etc",
+        "game",
+        "travel_place"
+      ],
+      "status": "new",
+      "stats": {
+        "n": 30,
+        "avg_views": 516448,
+        "median_views": 142027,
+        "lift_avg": 2.51,
+        "lift_med": 5.07
+      },
+      "evidence": {
+        "best_example": "[ENG] 스키장 알바 추천한 Job것 언놈이냐; ❄겨울철 대표 알바❄ 선배고 PD고 죄다 눈에 빠져서 재난영화 찍을 뻔한 스키장 알바 리뷰ㅣ워크맨 ep.33",
+        "views": 9639006,
+        "query": "스키장 후기"
+      }
+    },
+    {
+      "id": "F14",
+      "name": "초단어 신뢰형 (≤10자)",
+      "template_hint": "초단어 신뢰형 (≤10자)",
+      "mechanism": "'팀 차이', '와 뜨거워', '계란 맛집' — n=63, avg 85만(4.1×)이지만 med 1.3만. 대형 채널의 여유 마커. 채널 파워 없으면 금물, 있으면 최강",
+      "best_for": [
+        "game",
+        "food"
+      ],
+      "status": "conditional",
+      "stats": {
+        "n": 63,
+        "avg_views": 849535,
+        "median_views": 12953,
+        "lift_avg": 4.13,
+        "lift_med": 0.46
+      },
+      "evidence": {
+        "best_example": "와 뜨거워",
+        "views": 14824183,
+        "query": "찜질방 꿀팁"
+      }
+    },
+    {
+      "id": "F15",
+      "name": "전문가/내부자 입장형",
+      "template_hint": "전문가/내부자 입장형",
+      "mechanism": "n=163, avg 1.0× / med 1.2× — 약양성으로 강등. '현직'보다 '알바/사장' 같은 현장 밀착형이 실제 상위 사례",
+      "best_for": [
+        "clothing",
+        "product"
+      ],
+      "status": "weak",
+      "stats": {
+        "n": 163,
+        "avg_views": 214970,
+        "median_views": 33557,
+        "lift_avg": 1.04,
+        "lift_med": 1.2
+      },
+      "evidence": {
+        "best_example": "[ENG] 스키장 알바 추천한 Job것 언놈이냐; ❄겨울철 대표 알바❄ 선배고 PD고 죄다 눈에 빠져서 재난영화 찍을 뻔한 스키장 알바 리뷰ㅣ워크맨 ep.33",
+        "views": 9639006,
+        "query": "스키장 후기"
+      }
+    },
+    {
+      "id": "F16",
+      "name": "기간 후기 디테일형",
+      "template_hint": "기간 후기 디테일형",
+      "mechanism": "n=83, avg 0.6× — 약화. '100일 후기' 자체는 이제 차별화 안 됨",
+      "best_for": [
+        "etc"
+      ],
+      "status": "weak",
+      "stats": {
+        "n": 83,
+        "avg_views": 112639,
+        "median_views": 31678,
+        "lift_avg": 0.55,
+        "lift_med": 1.13
+      },
+      "evidence": {
+        "best_example": "8년차 왕홍의 하루는 이렇습니다..📸",
+        "views": 1173740,
+        "query": "클렌징폼 브이로그"
+      }
+    }
+  ],
+  "demoted_formulas_1st_pass": [
+    {
+      "was": "F5(1차) 숨은 꿀정보형",
+      "verdict": "무신호",
+      "evidence": "'모르는/은근/몰랐' n=24 med 리프트 0.85, '꿀팁' n=263 med 0.95, '꿀' n=335 med 1.04 — 240건 샘플의 오탐"
+    },
+    {
+      "was": "F6(1차) 장기 대량 검증→축약형",
+      "verdict": "안티패턴 강등",
+      "evidence": "'N년 동안 ... 베스트 M' 패턴 n=76, 중간값 80뷰 (전체 중간값 28,006의 0.3%). '베스트' 단어 자체 med 148"
+    },
+    {
+      "was": "F10(1차) 인생 보증형 + 숫자 리스트",
+      "verdict": "안티패턴 강등",
+      "evidence": "'인생맛집/인생템' n=15 med 리프트 0.08. '인생' 단어 med 49,239(1.8×)지만 '인생+N리스트' 조합은 하락"
+    },
+    {
+      "was": "F11(1차) 공감 반전 꿀팁형",
+      "verdict": "약화",
+      "evidence": "n=9, avg 리프트 0.71 — 소표본에서 유의미했으나 대량 데이터에서 무신호"
     }
   ],
   "by_category": {
     "game": {
       "label": "게임",
       "stats": {
-        "sample": 51,
-        "avg_views": 344794,
-        "median_views": 113281,
-        "avg_title_len": 46.3
+        "sample": 2483,
+        "avg_views": 241600,
+        "median_views": 34342,
+        "avg_title_len": 49.5
       },
-      "dominant_hooks": {
-        "has_digit": 0.471,
-        "is_korean": 0.647
+      "dominant_hooks_top10pct": {
+        "question": 0.157,
+        "has_digit": 0.476,
+        "emoji": 0.081,
+        "listy": 0.109,
+        "slang": 0.121,
+        "is_korean": 0.669
       },
       "top_titles": [
         {
-          "title": "광고에 ㅈㄴ 뜨던 게임, 개빡쳐서 깔아봤습니다",
-          "views": 2492598,
-          "query": "모바일 게임 리뷰"
+          "title": "[장삐쭈 단편선] 플레이스테이션",
+          "views": 17496088,
+          "query": "플스5 게임 브이로그"
         },
         {
-          "title": "[SOL: enchant]「신의 거부」현빈 편",
-          "views": 2289978,
-          "query": "게임 광고"
+          "title": "TOP 250 FUNNIEST FAILS IN BRAWL STARS (Part 2)",
+          "views": 16528998,
+          "query": "브롤스타즈 best"
         },
         {
-          "title": "Aoni's Vlog of Going to Buy a New Nintendo Alone★ (feat. Third Island)",
-          "views": 1843928,
-          "query": "게임 후기 브이로그"
+          "title": "[Betty] God gave me only a voice, not a face.",
+          "views": 13596205,
+          "query": "로맨스 게임 초보"
         }
       ],
       "recommended_formulas": [
         "F1 광고분노 → 직접 체험형",
-        "F2 직접 검증형 (A vs B)",
+        "F3 구체적 금액 + 의문형",
         "F4 감탄 슬랭 오프닝형",
+        "F6 하우투 명령형",
         "F8 광고 아님 표방형",
-        "F11 공감 반전 꿀팁형",
-        "F12 기간 후기 디테일형"
+        "F11 대공개/공개형",
+        "F12 시리즈화 (ep/Part/N탄)"
+      ]
+    },
+    "food": {
+      "label": "음식/맛집/레시피",
+      "stats": {
+        "sample": 901,
+        "avg_views": 384852,
+        "median_views": 53456,
+        "avg_title_len": 56.4
+      },
+      "dominant_hooks_top10pct": {
+        "question": 0.122,
+        "has_digit": 0.489,
+        "emoji": 0.256,
+        "listy": 0.111,
+        "money_ref": 0.056,
+        "series_ref": 0.078,
+        "is_korean": 0.622
+      },
+      "top_titles": [
+        {
+          "title": "[두부볶음] 두부 반찬 중에 단연코 최고! 이 영상을 본다면 밥반찬 걱정 NO! / 두부요리 Stir-fried tofu",
+          "views": 12658301,
+          "query": "반찬 추천"
+        },
+        {
+          "title": "장난감 싱크대에서 진짜 계란후라이와 된장찌개가??!! 물나오는 싱크대에서 닌니의 요리 교실",
+          "views": 9991393,
+          "query": "간식 추천 진짜"
+        },
+        {
+          "title": "계란후라이만 할 줄 알면 누구나 맛있게! ✔요즘 우리집은 이거 먹느라 배달 음식 끊었어요.",
+          "views": 8020563,
+          "query": "반찬 꿀팁"
+        }
+      ],
+      "recommended_formulas": [
+        "F3 구체적 금액 + 의문형",
+        "F6 하우투 명령형",
+        "F7 경고/손실 회피형",
+        "F8 광고 아님 표방형",
+        "F10 질문 미해결형 (?)",
+        "F11 대공개/공개형",
+        "F12 시리즈화 (ep/Part/N탄)"
+      ]
+    },
+    "travel_place": {
+      "label": "여행/장소/체험",
+      "stats": {
+        "sample": 753,
+        "avg_views": 388736,
+        "median_views": 33910,
+        "avg_title_len": 58.0
+      },
+      "dominant_hooks_top10pct": {
+        "question": 0.227,
+        "has_digit": 0.507,
+        "emoji": 0.16,
+        "vs": 0.067,
+        "listy": 0.08,
+        "slang": 0.093,
+        "money_ref": 0.08,
+        "series_ref": 0.12,
+        "is_korean": 0.64
+      },
+      "top_titles": [
+        {
+          "title": "🎉200만 구독자 특집이 되어버린 에버랜드 2탄!! 🎉 역대급 초과근무에 파업 선언 릴레이?! (feat. 뒤늦은 골드버튼 언박싱)ㅣ워크맨 ep.18",
+          "views": 15387858,
+          "query": "놀이공원 언박싱"
+        },
+        {
+          "title": "와 뜨거워",
+          "views": 14824183,
+          "query": "찜질방 꿀팁"
+        },
+        {
+          "title": "찜질방 가면 꼭 있는 유형ㅋㅋㅋ (베개젠가,푸드파이터형 등등)",
+          "views": 14781422,
+          "query": "찜질방 꿀팁"
+        }
+      ],
+      "recommended_formulas": [
+        "F3 구체적 금액 + 의문형",
+        "F4 감탄 슬랭 오프닝형",
+        "F10 질문 미해결형 (?)",
+        "F11 대공개/공개형",
+        "F12 시리즈화 (ep/Part/N탄)",
+        "F15 전문가/내부자 입장형"
+      ]
+    },
+    "product": {
+      "label": "제품/가전/IT",
+      "stats": {
+        "sample": 2094,
+        "avg_views": 161802,
+        "median_views": 30311,
+        "avg_title_len": 58.6
+      },
+      "dominant_hooks_top10pct": {
+        "question": 0.373,
+        "has_digit": 0.656,
+        "emoji": 0.105,
+        "listy": 0.115,
+        "slang": 0.091,
+        "money_ref": 0.134,
+        "is_korean": 0.708
+      },
+      "top_titles": [
+        {
+          "title": "진작 이렇게 먹을걸! 지금까지 헛 돈 많이 썼네요~전기밥솥에 우유 2통을 넣었더니 예전에 엄마가 해주시던 맛이 나요👍👍수제요거트, 그릭요거트, 전기밥솥 요거트만들",
+          "views": 7267666,
+          "query": "전기밥솥 실패"
+        },
+        {
+          "title": "[단독] \"이젠 캠핑 안 가…다 잃었어요\" 매달 230만 원 내고 '절망' / SBS 8뉴스",
+          "views": 4585634,
+          "query": "레저매트 브이로그"
+        },
+        {
+          "title": "\"전기밥솥 카스테라\" - 오븐없이도 촉촉하고 폭신한 카스테라 실패없이 만드는 방법! Castella",
+          "views": 4173740,
+          "query": "전기밥솥 실패"
+        }
+      ],
+      "recommended_formulas": [
+        "F2 직접 검증형 (A vs B)",
+        "F3 구체적 금액 + 의문형",
+        "F4 감탄 슬랭 오프닝형",
+        "F6 하우투 명령형",
+        "F7 경고/손실 회피형",
+        "F8 광고 아님 표방형",
+        "F10 질문 미해결형 (?)"
+      ]
+    },
+    "beauty": {
+      "label": "뷰티",
+      "stats": {
+        "sample": 664,
+        "avg_views": 155238,
+        "median_views": 48822,
+        "avg_title_len": 64.5
+      },
+      "dominant_hooks_top10pct": {
+        "question": 0.333,
+        "has_digit": 0.53,
+        "emoji": 0.485,
+        "listy": 0.318,
+        "is_korean": 0.682
+      },
+      "top_titles": [
+        {
+          "title": "Conquer root volume perfectly with Dyson Airwrap",
+          "views": 3240072,
+          "query": "다이슨 에어랩 실패"
+        },
+        {
+          "title": "[자막뉴스] \"선크림은 잘 안 지워지네?\" '폼클렌저' 검수해 봤더니.. (MBC충북 뉴스)",
+          "views": 2461133,
+          "query": "클렌징폼 비교"
+        },
+        {
+          "title": "(SUB) 광고❌ 이나연의 꿀피부 만드는 법🍯 l 수분진정 기초템 추천💧 l 나이트 루틴 대공개 l 효소 클렌저 l 워터 에센스",
+          "views": 2347519,
+          "query": "마스크팩 찐후기"
+        }
+      ],
+      "recommended_formulas": [
+        "F3 구체적 금액 + 의문형",
+        "F6 하우투 명령형",
+        "F7 경고/손실 회피형",
+        "F8 광고 아님 표방형",
+        "F10 질문 미해결형 (?)",
+        "F11 대공개/공개형",
+        "F13 글로벌 자막 진출형 ([ENG])"
+      ]
+    },
+    "site_app": {
+      "label": "사이트/앱/툴",
+      "stats": {
+        "sample": 1378,
+        "avg_views": 169044,
+        "median_views": 14602,
+        "avg_title_len": 54.6
+      },
+      "dominant_hooks_top10pct": {
+        "question": 0.212,
+        "has_digit": 0.613,
+        "emoji": 0.088,
+        "listy": 0.168,
+        "money_ref": 0.058,
+        "series_ref": 0.058,
+        "is_korean": 0.715
+      },
+      "top_titles": [
+        {
+          "title": "\"The era of making money by working is over.\" Traits of people whose value will skyrocket ",
+          "views": 7043124,
+          "query": "AI 사이트 진짜"
+        },
+        {
+          "title": "[직장인 필수] 엑셀 기초, 이 영상으로 마스터하세요! | 실무자 맞춤, 4시간 완성 코스",
+          "views": 6140788,
+          "query": "엑셀 꿀팁 실사용"
+        },
+        {
+          "title": "Office Excel: 3 Formulas and This One Feature Is All You Need (Seriously;;)",
+          "views": 6106106,
+          "query": "엑셀 꿀팁 실사용"
+        }
+      ],
+      "recommended_formulas": [
+        "F3 구체적 금액 + 의문형",
+        "F4 감탄 슬랭 오프닝형",
+        "F6 하우투 명령형",
+        "F7 경고/손실 회피형",
+        "F11 대공개/공개형",
+        "F12 시리즈화 (ep/Part/N탄)"
       ]
     },
     "clothing": {
       "label": "옷/패션",
       "stats": {
-        "sample": 49,
-        "avg_views": 245513,
-        "median_views": 93565,
-        "avg_title_len": 55.0
+        "sample": 1956,
+        "avg_views": 94156,
+        "median_views": 16102,
+        "avg_title_len": 54.6
       },
-      "dominant_hooks": {
-        "question": 0.184,
-        "has_digit": 0.449,
-        "is_korean": 0.694
-      },
-      "top_titles": [
-        {
-          "title": "[뮤뱅 원테이크 4K] 코르티스(CORTIS) 'FaSHioN' 4K Bonus Ver. @뮤직뱅크(Music Bank) 250912",
-          "views": 2685275,
-          "query": "OOTD 한국"
-        },
-        {
-          "title": "🛫침착한 여행 D-1ㅣ짐싸기,공항패션,브이로그",
-          "views": 1484974,
-          "query": "옷 추천 브이로그"
-        },
-        {
-          "title": "10분만에 스타일리스트가 '패션꼼수' 예쁘게 입는 법 알려드릴게요. [현실 꿀팁 총정리]",
-          "views": 1150591,
-          "query": "코디 팁"
-        }
-      ],
-      "recommended_formulas": [
-        "F6 장기 대량 검증 → 축약형",
-        "F7 전문가/내부자 입장형",
-        "F11 공감 반전 꿀팁형"
-      ]
-    },
-    "site": {
-      "label": "사이트/앱",
-      "stats": {
-        "sample": 31,
-        "avg_views": 150773,
-        "median_views": 23738,
-        "avg_title_len": 49.3
-      },
-      "dominant_hooks": {
-        "has_digit": 0.516,
-        "is_korean": 0.742
+      "dominant_hooks_top10pct": {
+        "question": 0.169,
+        "has_digit": 0.482,
+        "emoji": 0.338,
+        "listy": 0.149,
+        "money_ref": 0.056,
+        "is_korean": 0.631
       },
       "top_titles": [
         {
-          "title": "ㄹㅇ 개 쓸데없는 사이트 모음",
-          "views": 1387913,
-          "query": "유용한 사이트"
+          "title": "더러운 운동화 핵 쉬운 세탁법 & 초고속 건조 꿀팁! 세탁에서 건조까지 1시간 스피디하게 가능? 데일리 운동화 부담없이 집에서 세탁하자! 세탁소 비법공개",
+          "views": 4449736,
+          "query": "스니커즈 꿀팁"
         },
         {
-          "title": "검색할 수 없는 사이트 딥웹에 대해 알아보자",
-          "views": 837975,
-          "query": "유용한 사이트"
+          "title": "HANDMADE Penny Loafers Making Process. Korean shoemaker with 50 years of experience",
+          "views": 3468049,
+          "query": "로퍼 직접 해봄"
         },
         {
-          "title": "대학생들이 은근히 모르는 과제 개꿀 사이트  | 연고티비",
-          "views": 754755,
-          "query": "유용한 사이트"
+          "title": "Goddess of Victory [GODDESS OF VICTORY : NIKKE OST]",
+          "views": 3003099,
+          "query": "니케 best"
         }
       ],
       "recommended_formulas": [
-        "F4 감탄 슬랭 오프닝형",
-        "F5 숨은 꿀정보형",
-        "F12 기간 후기 디테일형"
-      ]
-    },
-    "product": {
-      "label": "제품",
-      "stats": {
-        "sample": 48,
-        "avg_views": 236647,
-        "median_views": 93907,
-        "avg_title_len": 66.5
-      },
-      "dominant_hooks": {
-        "has_digit": 0.583,
-        "is_korean": 0.583
-      },
-      "top_titles": [
-        {
-          "title": "Temu Haul & Unboxing Review(Not an Ad)",
-          "views": 3103358,
-          "query": "제품 리뷰 언박싱"
-        },
-        {
-          "title": "얼죽아 필수품 스탠리 텀블러. 싸게 사려다가 돈만 날린다?! 정품 vs 짝퉁 비교하다 생긴일.",
-          "views": 1119418,
-          "query": "정품 리뷰"
-        },
-        {
-          "title": "7 Life-Enhancing Items - Cost-Effective Electronics & Home Goods",
-          "views": 908015,
-          "query": "인생템 추천"
-        }
-      ],
-      "recommended_formulas": [
-        "F1 광고분노 → 직접 체험형",
-        "F2 직접 검증형 (A vs B)",
         "F3 구체적 금액 + 의문형",
-        "F5 숨은 꿀정보형",
-        "F6 장기 대량 검증 → 축약형",
-        "F7 전문가/내부자 입장형",
+        "F4 감탄 슬랭 오프닝형",
         "F8 광고 아님 표방형",
-        "F9 사건 서사형 ('~하다 생긴 일')",
-        "F10 인생 보증형 + 숫자 리스트"
+        "F11 대공개/공개형",
+        "F13 글로벌 자막 진출형 ([ENG])",
+        "F15 전문가/내부자 입장형"
       ]
     },
-    "etc_experience": {
-      "label": "기타(여행/맛집/영화/서비스)",
+    "etc": {
+      "label": "기타",
       "stats": {
-        "sample": 58,
-        "avg_views": 507794,
-        "median_views": 57070,
-        "avg_title_len": 45.0
+        "sample": 40,
+        "avg_views": 376123,
+        "median_views": 20726,
+        "avg_title_len": 52.5
       },
-      "dominant_hooks": {
-        "has_digit": 0.362,
-        "is_korean": 0.707
+      "dominant_hooks_top10pct": {
+        "has_digit": 0.5,
+        "is_korean": 0.75
       },
       "top_titles": [
-        {
-          "title": "Travel YouTubers Rank Countries They Want to Visit (with Pani Bottle & Kwaktube)",
-          "views": 3879622,
-          "query": "여행 후기"
-        },
         {
           "title": "이 영화를 보고 암을 치료했습니다! [리얼]",
           "views": 2880656,
@@ -443,221 +850,646 @@
           "title": "[Movie Masterpiece Selection] Episode 25 - Real",
           "views": 2444848,
           "query": "리얼 리뷰"
+        },
+        {
+          "title": "2017년 최고의 영화, 리얼",
+          "views": 1641994,
+          "query": "리얼 리뷰"
         }
       ],
       "recommended_formulas": [
-        "F3 구체적 금액 + 의문형",
-        "F6 장기 대량 검증 → 축약형",
-        "F9 사건 서사형 ('~하다 생긴 일')",
-        "F10 인생 보증형 + 숫자 리스트"
+        "F10 질문 미해결형 (?)",
+        "F4 감탄 슬랭 오프닝형"
       ]
     }
   },
   "hook_words": [
     {
-      "word": "광고에 뜨던/광고에 ㅈㄴ 뜨던",
-      "role": "광고 과노출 공감 → 체험 전환 도입부",
-      "evidence": {
-        "example": "광고에 ㅈㄴ 뜨던 게임, 개빡쳐서 깔아봤습니다",
-        "views": 2492598,
-        "search_query": "모바일 게임 리뷰"
+      "word": "? / ~일까? / 이게 맞나요?",
+      "role": "결론 미해결 — 최강 클릭 버튼",
+      "stats": {
+        "count": 1741,
+        "median_views": 48852,
+        "lift_median": 1.74
       },
-      "corpus_count": 14,
-      "avg_views": 291309
+      "note": "상위10% 22.1% vs 하위10% 4.0%"
+    },
+    {
+      "word": "봤습니다 (체험 종결)",
+      "role": "경험 완료 사실 보고 — 결과 궁금증",
+      "stats": {
+        "count": 93,
+        "median_views": 96388,
+        "lift_median": 3.44
+      }
+    },
+    {
+      "word": "1위 / 최고",
+      "role": "명확한 1등 지정",
+      "stats": {
+        "count": 70,
+        "median_views": 151534,
+        "lift_median": 5.41
+      },
+      "note": "'1위'는 med 5.4× — 최고 훅. 단 '베스트N/Top N' 나열과 반대"
+    },
+    {
+      "word": "정품",
+      "role": "진품 검증 프레임 (짝퉁 시대 신뢰)",
+      "stats": {
+        "count": 19,
+        "median_views": 118462,
+        "lift_median": 4.23
+      }
+    },
+    {
+      "word": "미쳤다/충격/소름",
+      "role": "감탄 반응 — 뇌가 기대하는 각성",
+      "stats": {
+        "count": 51,
+        "median_views": 101555,
+        "lift_median": 3.63
+      }
+    },
+    {
+      "word": "대공개/공개",
+      "role": "정보 개봉 서사",
+      "stats": {
+        "count": 108,
+        "median_views": 80462,
+        "lift_median": 2.87
+      }
+    },
+    {
+      "word": "유형/~하는 사람",
+      "role": "자기 식별 유도 — '이거 나잖아' 공감",
+      "stats": {
+        "avg_views": 1698353,
+        "lift_avg": 8.25
+      },
+      "note": "n=9 소표본, TOP40 다수 차지"
     },
     {
       "word": "직접",
-      "role": "검증자가 본인임을 표시 — 신뢰 코어",
-      "corpus_count": 2,
-      "avg_views": 1080401
+      "role": "검증자=본인 — 신뢰 코어",
+      "stats": {
+        "count": 88,
+        "median_views": 70050,
+        "lift_median": 2.5
+      }
     },
     {
-      "word": "~해봤습니다/깔아봤습니다/마셔봤습니다",
-      "role": "체험 완료형 종결 — 결과 궁금증"
+      "word": "차이",
+      "role": "비교 결과 예고 ('팀 차이' 1,080만)",
+      "stats": {
+        "count": 40,
+        "lift_avg": 2.5
+      }
     },
     {
-      "word": "ㄹㅇ / ㅈㄴ / 개",
-      "role": "신세대 강조 접두어 — 진정성 톤"
+      "word": "주의/헛돈",
+      "role": "손실 회피 본능 자극",
+      "stats": {
+        "count": 37,
+        "median_views": 67019,
+        "lift_median": 2.39
+      }
     },
     {
-      "word": "개빡쳐서/개꿀/개쓸데없는",
-      "role": "감정 강도 부사"
+      "word": "[ENG]/한글자막",
+      "role": "글로벌 시장 진입 마커",
+      "stats": {
+        "count": 36,
+        "median_views": 213920,
+        "lift_median": 7.64
+      }
     },
     {
-      "word": "은근히 모르는",
-      "role": "정보 우월감 유발"
+      "word": "ep/Part/2탄",
+      "role": "시리즈 록인 — 구독 유입",
+      "stats": {
+        "count": 171,
+        "avg_views": 714379,
+        "lift_avg": 3.47
+      }
     },
     {
-      "word": "베스트 N / N곳 중 M",
-      "role": "숫자 축소로 엄선 느낌",
-      "corpus_count": 5,
-      "avg_views": 371301
+      "word": "만원/억 (구체 금액)",
+      "role": "숫자가 아니라 '돈' — 진정성",
+      "stats": {
+        "count": 294,
+        "median_views": 64273,
+        "lift_median": 2.29
+      }
     },
     {
-      "word": "vs / 비교",
-      "role": "대결 구조 호기심",
-      "corpus_count": 4,
-      "avg_views": 834092
+      "word": "반전/사연",
+      "role": "스토리 궁금증",
+      "stats": {
+        "count": 54,
+        "lift_avg": 1.6
+      }
     },
     {
-      "word": "이게 맞나요? / 과연 ~일까?",
-      "role": "의문 종결 — 클릭 버튼"
+      "word": "ㄹㅇ/ㅈㄴ/개/찐",
+      "role": "신세대 강조 — 구어 톤 (상위 7.6% vs 하위 4.5%)"
     },
     {
-      "word": "인생맛집/인생템/꿀팁",
-      "role": "보증 수식어",
-      "corpus_count": 7,
-      "avg_views": 279288
-    },
-    {
-      "word": "미쳤다/소름",
-      "role": "감탄 반응 오프닝"
-    },
-    {
-      "word": "생긴 일",
-      "role": "사건 예고 종결"
+      "word": "이렇게/해 보세요",
+      "role": "즉시 실행 가능성 약속",
+      "stats": {
+        "count": 219,
+        "lift_avg": 1.62
+      }
     }
   ],
   "hook_word_lifts": [
     {
-      "word": "봤습니다",
-      "count": 2,
-      "avg_views": 2292750,
-      "lift_vs_overall": 7.24
+      "word": "대공개",
+      "count": 16,
+      "avg_views": 994157,
+      "median_views": 167144,
+      "lift_vs_overall": 4.83,
+      "lift_median": 5.97
     },
     {
-      "word": "직접",
-      "count": 2,
-      "avg_views": 1080401,
-      "lift_vs_overall": 3.41
+      "word": "억",
+      "count": 32,
+      "avg_views": 597727,
+      "median_views": 132324,
+      "lift_vs_overall": 2.9,
+      "lift_median": 4.72
     },
     {
-      "word": "vs",
-      "count": 4,
-      "avg_views": 834092,
-      "lift_vs_overall": 2.63
-    },
-    {
-      "word": "최고",
-      "count": 3,
-      "avg_views": 716250,
-      "lift_vs_overall": 2.26
+      "word": "차이",
+      "count": 40,
+      "avg_views": 514554,
+      "median_views": 40528,
+      "lift_vs_overall": 2.5,
+      "lift_median": 1.45
     },
     {
       "word": "정품",
-      "count": 6,
-      "avg_views": 603788,
-      "lift_vs_overall": 1.91
+      "count": 19,
+      "avg_views": 512999,
+      "median_views": 118462,
+      "lift_vs_overall": 2.49,
+      "lift_median": 4.23
     },
     {
-      "word": "비교",
-      "count": 2,
-      "avg_views": 593546,
-      "lift_vs_overall": 1.87
+      "word": "봤습니다",
+      "count": 93,
+      "avg_views": 408459,
+      "median_views": 96388,
+      "lift_vs_overall": 1.98,
+      "lift_median": 3.44
     },
     {
-      "word": "꿀팁",
-      "count": 8,
-      "avg_views": 387070,
-      "lift_vs_overall": 1.22
+      "word": "공개",
+      "count": 108,
+      "avg_views": 403361,
+      "median_views": 80462,
+      "lift_vs_overall": 1.96,
+      "lift_median": 2.87
+    },
+    {
+      "word": "역대급",
+      "count": 83,
+      "avg_views": 371370,
+      "median_views": 14555,
+      "lift_vs_overall": 1.8,
+      "lift_median": 0.52
+    },
+    {
+      "word": "주의",
+      "count": 37,
+      "avg_views": 368024,
+      "median_views": 67019,
+      "lift_vs_overall": 1.79,
+      "lift_median": 2.39
     },
     {
       "word": "모르는",
-      "count": 2,
-      "avg_views": 378178,
-      "lift_vs_overall": 1.19
+      "count": 24,
+      "avg_views": 334070,
+      "median_views": 23766,
+      "lift_vs_overall": 1.62,
+      "lift_median": 0.85
     },
     {
-      "word": "베스트",
-      "count": 5,
-      "avg_views": 371301,
-      "lift_vs_overall": 1.17
+      "word": "feat",
+      "count": 177,
+      "avg_views": 331794,
+      "median_views": 30344,
+      "lift_vs_overall": 1.61,
+      "lift_median": 1.08
     },
     {
-      "word": "후기",
-      "count": 12,
-      "avg_views": 366466,
-      "lift_vs_overall": 1.16
+      "word": "미친",
+      "count": 51,
+      "avg_views": 329479,
+      "median_views": 101555,
+      "lift_vs_overall": 1.6,
+      "lift_median": 3.63
+    },
+    {
+      "word": "충격",
+      "count": 21,
+      "avg_views": 314688,
+      "median_views": 111276,
+      "lift_vs_overall": 1.53,
+      "lift_median": 3.97
+    },
+    {
+      "word": "최고",
+      "count": 137,
+      "avg_views": 313287,
+      "median_views": 46027,
+      "lift_vs_overall": 1.52,
+      "lift_median": 1.64
+    },
+    {
+      "word": "과연",
+      "count": 40,
+      "avg_views": 301848,
+      "median_views": 36202,
+      "lift_vs_overall": 1.47,
+      "lift_median": 1.29
+    },
+    {
+      "word": "미쳤",
+      "count": 32,
+      "avg_views": 297632,
+      "median_views": 113199,
+      "lift_vs_overall": 1.45,
+      "lift_median": 4.04
+    },
+    {
+      "word": "1위",
+      "count": 70,
+      "avg_views": 283088,
+      "median_views": 151534,
+      "lift_vs_overall": 1.38,
+      "lift_median": 5.41
+    },
+    {
+      "word": "신기",
+      "count": 23,
+      "avg_views": 278652,
+      "median_views": 40859,
+      "lift_vs_overall": 1.35,
+      "lift_median": 1.46
+    },
+    {
+      "word": "만원",
+      "count": 274,
+      "avg_views": 267129,
+      "median_views": 63998,
+      "lift_vs_overall": 1.3,
+      "lift_median": 2.29
+    },
+    {
+      "word": "직접",
+      "count": 88,
+      "avg_views": 253684,
+      "median_views": 70050,
+      "lift_vs_overall": 1.23,
+      "lift_median": 2.5
+    },
+    {
+      "word": "진짜",
+      "count": 264,
+      "avg_views": 244869,
+      "median_views": 31580,
+      "lift_vs_overall": 1.19,
+      "lift_median": 1.13
+    },
+    {
+      "word": "모음",
+      "count": 120,
+      "avg_views": 226096,
+      "median_views": 27164,
+      "lift_vs_overall": 1.1,
+      "lift_median": 0.97
+    },
+    {
+      "word": "이유",
+      "count": 184,
+      "avg_views": 212630,
+      "median_views": 54992,
+      "lift_vs_overall": 1.03,
+      "lift_median": 1.96
+    },
+    {
+      "word": "수",
+      "count": 666,
+      "avg_views": 209297,
+      "median_views": 26336,
+      "lift_vs_overall": 1.02,
+      "lift_median": 0.94
+    },
+    {
+      "word": "vs",
+      "count": 288,
+      "avg_views": 196479,
+      "median_views": 40376,
+      "lift_vs_overall": 0.95,
+      "lift_median": 1.44
     },
     {
       "word": "광고",
-      "count": 14,
-      "avg_views": 291309,
-      "lift_vs_overall": 0.92
+      "count": 172,
+      "avg_views": 192610,
+      "median_views": 41890,
+      "lift_vs_overall": 0.94,
+      "lift_median": 1.5
     },
     {
-      "word": "리뷰",
-      "count": 8,
-      "avg_views": 292421,
-      "lift_vs_overall": 0.92
+      "word": "이것",
+      "count": 84,
+      "avg_views": 192756,
+      "median_views": 36822,
+      "lift_vs_overall": 0.94,
+      "lift_median": 1.31
     },
     {
-      "word": "꿀",
-      "count": 14,
-      "avg_views": 283463,
-      "lift_vs_overall": 0.89
+      "word": "요즘",
+      "count": 92,
+      "avg_views": 182713,
+      "median_views": 32796,
+      "lift_vs_overall": 0.89,
+      "lift_median": 1.17
+    },
+    {
+      "word": "일까",
+      "count": 35,
+      "avg_views": 172881,
+      "median_views": 37733,
+      "lift_vs_overall": 0.84,
+      "lift_median": 1.35
+    },
+    {
+      "word": "이거",
+      "count": 128,
+      "avg_views": 171670,
+      "median_views": 46782,
+      "lift_vs_overall": 0.83,
+      "lift_median": 1.67
     },
     {
       "word": "인생",
-      "count": 7,
-      "avg_views": 279288,
-      "lift_vs_overall": 0.88
+      "count": 109,
+      "avg_views": 166045,
+      "median_views": 49239,
+      "lift_vs_overall": 0.81,
+      "lift_median": 1.76
     },
     {
-      "word": "쇼츠",
-      "count": 5,
-      "avg_views": 239917,
-      "lift_vs_overall": 0.76
+      "word": "꿀",
+      "count": 335,
+      "avg_views": 162232,
+      "median_views": 29082,
+      "lift_vs_overall": 0.79,
+      "lift_median": 1.04
+    },
+    {
+      "word": "꿀팁",
+      "count": 263,
+      "avg_views": 155524,
+      "median_views": 26588,
+      "lift_vs_overall": 0.76,
+      "lift_median": 0.95
+    },
+    {
+      "word": "초보",
+      "count": 170,
+      "avg_views": 126367,
+      "median_views": 28277,
+      "lift_vs_overall": 0.61,
+      "lift_median": 1.01
+    },
+    {
+      "word": "꿀템",
+      "count": 35,
+      "avg_views": 120177,
+      "median_views": 33557,
+      "lift_vs_overall": 0.58,
+      "lift_median": 1.2
+    },
+    {
+      "word": "리뷰",
+      "count": 879,
+      "avg_views": 111827,
+      "median_views": 8983,
+      "lift_vs_overall": 0.54,
+      "lift_median": 0.32
+    },
+    {
+      "word": "실패",
+      "count": 225,
+      "avg_views": 109479,
+      "median_views": 2432,
+      "lift_vs_overall": 0.53,
+      "lift_median": 0.09
+    },
+    {
+      "word": "best",
+      "count": 485,
+      "avg_views": 105664,
+      "median_views": 19240,
+      "lift_vs_overall": 0.51,
+      "lift_median": 0.69
+    },
+    {
+      "word": "템",
+      "count": 341,
+      "avg_views": 104124,
+      "median_views": 23719,
+      "lift_vs_overall": 0.51,
+      "lift_median": 0.85
     },
     {
       "word": "총정리",
-      "count": 8,
-      "avg_views": 196676,
-      "lift_vs_overall": 0.62
+      "count": 326,
+      "avg_views": 99634,
+      "median_views": 11323,
+      "lift_vs_overall": 0.48,
+      "lift_median": 0.4
     },
     {
-      "word": "언박싱",
-      "count": 3,
-      "avg_views": 191847,
-      "lift_vs_overall": 0.61
+      "word": "가성비",
+      "count": 414,
+      "avg_views": 87575,
+      "median_views": 8050,
+      "lift_vs_overall": 0.43,
+      "lift_median": 0.29
+    },
+    {
+      "word": "솔직",
+      "count": 238,
+      "avg_views": 84835,
+      "median_views": 8996,
+      "lift_vs_overall": 0.41,
+      "lift_median": 0.32
     },
     {
       "word": "추천",
-      "count": 36,
-      "avg_views": 65115,
-      "lift_vs_overall": 0.21
+      "count": 1427,
+      "avg_views": 80998,
+      "median_views": 6715,
+      "lift_vs_overall": 0.39,
+      "lift_median": 0.24
+    },
+    {
+      "word": "브이로그",
+      "count": 314,
+      "avg_views": 77998,
+      "median_views": 6735,
+      "lift_vs_overall": 0.38,
+      "lift_median": 0.24
+    },
+    {
+      "word": "언박싱",
+      "count": 388,
+      "avg_views": 75676,
+      "median_views": 2905,
+      "lift_vs_overall": 0.37,
+      "lift_median": 0.1
+    },
+    {
+      "word": "핫한",
+      "count": 34,
+      "avg_views": 75046,
+      "median_views": 32647,
+      "lift_vs_overall": 0.36,
+      "lift_median": 1.17
+    },
+    {
+      "word": "장단점",
+      "count": 77,
+      "avg_views": 74882,
+      "median_views": 34261,
+      "lift_vs_overall": 0.36,
+      "lift_median": 1.22
+    },
+    {
+      "word": "top",
+      "count": 878,
+      "avg_views": 74942,
+      "median_views": 641,
+      "lift_vs_overall": 0.36,
+      "lift_median": 0.02
+    },
+    {
+      "word": "내돈내산",
+      "count": 300,
+      "avg_views": 71834,
+      "median_views": 9987,
+      "lift_vs_overall": 0.35,
+      "lift_median": 0.36
+    },
+    {
+      "word": "비교",
+      "count": 389,
+      "avg_views": 68827,
+      "median_views": 5547,
+      "lift_vs_overall": 0.33,
+      "lift_median": 0.2
+    },
+    {
+      "word": "찐후기",
+      "count": 66,
+      "avg_views": 66288,
+      "median_views": 32,
+      "lift_vs_overall": 0.32,
+      "lift_median": 0.0
+    },
+    {
+      "word": "무료",
+      "count": 137,
+      "avg_views": 59360,
+      "median_views": 11584,
+      "lift_vs_overall": 0.29,
+      "lift_median": 0.41
+    },
+    {
+      "word": "후기",
+      "count": 637,
+      "avg_views": 58112,
+      "median_views": 1047,
+      "lift_vs_overall": 0.28,
+      "lift_median": 0.04
+    },
+    {
+      "word": "실사용",
+      "count": 38,
+      "avg_views": 53471,
+      "median_views": 3874,
+      "lift_vs_overall": 0.26,
+      "lift_median": 0.14
+    },
+    {
+      "word": "베스트",
+      "count": 164,
+      "avg_views": 47136,
+      "median_views": 148,
+      "lift_vs_overall": 0.23,
+      "lift_median": 0.01
+    },
+    {
+      "word": "순위",
+      "count": 257,
+      "avg_views": 31870,
+      "median_views": 86,
+      "lift_vs_overall": 0.15,
+      "lift_median": 0.0
     }
   ],
   "anti_patterns": [
     {
-      "pattern": "한국 타깃 검색쿼리에 영어 제목",
-      "evidence": "한글 제목 평균 301,362 vs 비한글 제목 평균 348,502",
-      "why": "영어 제목은 한국 로컬 검색/추천 노출에서 소통 실패. 글로벌 채널이 아닌 이상 국문 필수"
+      "pattern": "'찐후기/솔직후기/내돈내산' 레이블 자체",
+      "evidence": "찐후기 n=66 med 32뷰 · 솔직 n=238 med 8,996 · 내돈내산 n=300 med 9,987 — 전부 전체 med(28,006)의 0.1-0.4배",
+      "why": "2026년 기준 이 단어들은 이미 전 시장이 쓰는 '성의 없는 신뢰 표방'. 레이블이 아니라 내용(금액/기간/질문)으로 신뢰를 증명해야 함"
     },
     {
-      "pattern": "후킹 없는 일반 명사형 제목 ('~추천', '~리뷰'만 붙임)",
-      "evidence": "하위 25%에서 체험동사 비중 5% · 상위 25%는 7%",
-      "why": "정보만 있고 사람(경험)이 없으면 클릭할 이유가 없음. 반드시 체험/감정/의문 중 1개 추가"
+      "pattern": "Top N / 베스트 N / 모음 / 총정리 / 순위 리스트형",
+      "evidence": "listy 플래그: 하위10% 48.5% vs 상위10% 14.3% — 격차 -0.34로 전체 최악. '베스트' med 148 · '순위' med 86 · 'top' med 641",
+      "why": "정보를 다 주겠다는 약속은 클릭 이유를 없앰 + 경쟁 과포화. 숫자는 '1위' 또는 '금액'으로만"
     },
     {
-      "pattern": "공식 브랜드필름/기업 홍보형 제목 ([Official], 브랜드명 선행)",
-      "evidence": "예: [Official] 브랜드필름 — 채널 파워 없으면 개인 채널 대비 노출 열위",
-      "why": "광고로 인식되는 순간 스킵. 개인/체험 시점으로 재포장해야 함"
+      "pattern": "언박싱/개봉 콘텐츠의 '언박싱' 제목 명시",
+      "evidence": "n=388, med 2,905 (0.10×)",
+      "why": "행위 자체가 식상. 개봉 순간의 반전/결과를 제목으로"
     },
     {
-      "pattern": "과도하게 긴 제목 (한 줄 넘김)",
-      "evidence": "상위 25% 평균 48자 vs 하위 25% 평균 52자",
-      "why": "모바일/쇼츠 피드에서 잘리는 제목은 후킹 손실. 핵심 훅 앞쪽 배치"
+      "pattern": "숫자 나열형 (Top10, 3가지, 7개...)",
+      "evidence": "has_digit: 하위10% 68.4% vs 상위10% 53.0%",
+      "why": "숫자가 리소스 약속으로만 쓰이면 실패. 단 금액(만원/억)·기간(일차)은 예외적으로 강신호"
     },
     {
-      "pattern": "3자 시점 정보 전달형 (1인칭 부재)",
-      "evidence": "상위 25% 1인칭/체험 비중 3% vs 하위 25% 0%",
-      "why": "유튜브는 1인칭 미디어. 뉴스형 중립 서술은 클릭률 낮음"
+      "pattern": "짧은 키워드 나열형 제목 (≤30자)",
+      "evidence": "하위10% 평균 39.6자, 10-30자 구간 med 최저(1.3-1.5만). 상위10% 평균 53.4자",
+      "why": "1차 '짧은 제목' 결론의 정정. 짧은 제목은 소형 채널의 SEO 키워드 나열. 예외: 대형 채널의 ≤10자 초단어(avg 85만)는 여유의 신뢰 마커"
     },
     {
-      "pattern": "결과를 다 말해주는 제목",
-      "evidence": "상위 제목들은 '이게 맞나요?'/'과연 ~일까?'처럼 결과를 물음으로 남김",
-      "why": "결론이 제목에 있으면 볼 이유가 사라짐. 궁금증은 미해결 상태로"
+      "pattern": "'실패' 키워드 단독 사용",
+      "evidence": "n=225, med 2,432 (0.09×)",
+      "why": "실패 콘텐츠 자체는 유효하나 '실패'를 제목에 그대로 쓰면 저품질 시그널. '헛돈/주의/버리기 전에'로 재포장"
+    },
+    {
+      "pattern": "분노/비난 저품질 감정어 (사기/쓰레기/차별 등)",
+      "evidence": "neg_emotion: 하위10% 7.5% vs 상위10% 5.6%",
+      "why": "1차에 '부정 감정 강함'으로 오기록된 패턴 — 240건 샘플 편향. 대량 데이터에서는 역방향"
+    },
+    {
+      "pattern": "'~브이로그' 명시",
+      "evidence": "n=314, med 6,735 (0.24×)",
+      "why": "장르 라벨은 훅이 아님. 브이로그라도 사건/질문/공개로 제목"
+    },
+    {
+      "pattern": "가성비 강조",
+      "evidence": "n=414, med 8,050 (0.29×)",
+      "why": "모두가 가성비를 말하는 시장에서 무차별화. '헛돈/낭비' 프레임이 2.4×"
     }
   ]
 }
