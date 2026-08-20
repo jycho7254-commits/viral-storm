@@ -108,22 +108,32 @@ def make_hybrid_short(
     filters = []
     for i in range(n):
         filters.append(
-            f"[{i}:v]scale=1080:1920:force_original_aspect_ratio=increase,"
-            f"crop=1080:1920,setsar=1,fps=30[v{i}]"
+            f"[{i}:v]scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,"
+            f"crop=1080:1920,"
+            f"unsharp=5:5:0.8:5:5:0.0,"  # 업스케일 후 선명도 보정
+            f"setsar=1,fps=30[v{i}]"
         )
     # concat
     concat_in = "".join(f"[v{i}]" for i in range(n))
     concat = f"{concat_in}concat=n={n}:v=1:a=0[vc]"
     # 자막
+    # 자막 — 실제 바이럴 숏츠 스타일 (08-20 학습반영)
+    # · 상단 1/3 위치 (h*0.28) — 실제 꿀템 숏츠들은 상단 텍스트가 많음
+    # · 크기 확대 72px + 2줄 분할 + 반투명 박스 배경 + 강조색(노랑) 지원
     caps = []
     for i, line in enumerate(script_lines):
-        cap = sanitize_caption(line)[:36]
+        full = sanitize_caption(line)
+        # 18자씩 2줄 분할 (실제 숏츠는 짧은 2줄)
+        chunks = [full[j:j+18] for j in range(0, len(full), 18)][:2]
         start, end = i * seg_dur, (i + 1) * seg_dur
-        caps.append(
-            f"drawtext=fontfile='{FONT_DIR}/malgun.ttf':text='{esc(cap)}':"
-            f"fontcolor=white:fontsize=58:borderw=5:bordercolor=black:"
-            f"x=(w-text_w)/2:y=h-320:enable='between(t\\,{start:.2f}\\,{end:.2f})'"
-        )
+        for k, chunk in enumerate(chunks):
+            y_base = int(1920 * 0.24) + k * 110
+            caps.append(
+                f"drawtext=fontfile='{FONT_DIR}/malgunbd.ttf':text='{esc(chunk)}':"
+                f"fontcolor=white:fontsize=76:borderw=6:bordercolor=black@"
+                f"0.9:box=1:boxcolor=black@0.45:boxborderw=18:"
+                f"x=(w-text_w)/2:y={y_base}:enable='between(t\\,{start:.2f}\\,{end:.2f})'"
+            )
     fc = ";".join(filters + [concat] + [f"[vc]{','.join(caps)}[vout]"])
 
     if not out_path:

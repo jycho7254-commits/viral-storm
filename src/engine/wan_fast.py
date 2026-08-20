@@ -55,7 +55,7 @@ def fast_generate(
     prompt: str,
     out_path: str = None,
     num_frames: int = 33,     # ~2초
-    steps: int = 8,           # 품질/속도 균형 (4=뭉개짐, 8=양호, 20=고품질)
+    steps: int = 12,          # 품질 우선 (08-20: 6→12 상향 — 저스텝 뭉개짐 형 피드백)
     height: int = 480,
     width: int = 832,
     seed: int = 42,

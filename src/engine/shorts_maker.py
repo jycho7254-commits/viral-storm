@@ -63,11 +63,17 @@ def tts(text: str, out_mp3: str, voice: str = "female", rate: str = "+8%", pitch
         import shutil
         shutil.copy(str(segs[0]), out_mp3)
     else:
-        # mp3 concat — 같은 코덱/샘플레이트라 스트림 병합 가능
+        # 문장 사이 0.18초 정적 삽입 (자연스러운 호흡) + 음량 정규화
+        # 실제 바이럴 숏츠 학습: 문장 간 호흡이 있어야 자연스러움
         list_file = tmp_dir / "list.txt"
         list_file.write_text("".join(f"file '{s}'\n" for s in segs), encoding="utf-8")
         subprocess.run(
-            [FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", str(list_file), "-c", "copy", out_mp3],
+            [FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", str(list_file),
+             "-af", "silenceremove=stop_periods=-1:stop_duration=0.05:stop_threshold=-45dB,"
+             "apad=pad_dur=0.18,"
+             "loudnorm=I=-16:TP=-1.5:LRA=11,"
+             "aformat=sample_rates=44100",
+             "-c:a", "libmp3lame", "-b:a", "128k", out_mp3],
             capture_output=True,
         )
     return out_mp3
