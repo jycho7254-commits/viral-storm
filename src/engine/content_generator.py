@@ -243,7 +243,17 @@ def generate_content(game_info, persona, platform='blog'):
 — 참고: 이 스타일(구성: 인사→게임 소개→실제 플레이 경험→솔직 장단점, 어조, 문단 길이)을 따라 하되 복사는 하지 마."""
 
     # 사용자 프롬프트
-    user = f"""다음 게임에 대한 {cfg['format']}을 작성해.
+    # 바이럴 패턴 지식베이스 주입 (25,199건 학습 — 플랫폼별 상이한 전략)
+    pattern_hint = ""
+    try:
+        from src.engine.viral_patterns import apply_patterns
+        category = (game_info.get("research") or {}).get("category") or "game"
+        plat_key = {"naver": "blog", "blog": "blog", "dc": "dc", "arca": "dc", "twitter": "youtube"}.get(platform, platform)
+        pattern_hint = apply_patterns(plat_key, category) + "\n\n"
+    except Exception:
+        pass
+
+    user = f"""{pattern_hint}다음 게임에 대한 {cfg['format']}을 작성해.
 
 대상명: {game_info.get('name', '')}
 장르: {game_info.get('genre', '')}
