@@ -241,31 +241,17 @@ def build_short(title, script_lines, image_paths, out_path, voice="female", bgm_
 
     cmd = [FFMPEG, "-y"] + inputs
     n_audio = n_seg  # 오디오 인덱스 (이미지 다음)
-    if bgm_path and os.path.exists(bgm_path):
-        cmd += [
-            "-filter_complex", fc,
-            "-map", "[vout]", "-map", f"{n_audio}:a", "-map", f"{n_audio + 1}:a",
-            "-filter_complex" if False else "-c:v", "libx264",
-        ]
-        # BGM 믹싱은 복잡 — 단순화: 나레이션만
-        cmd = [FFMPEG, "-y"] + inputs[: -2] + [  # bgm 입력 제거
-            "-filter_complex", fc,
-            "-map", "[vout]", "-map", f"{n_audio}:a",
-            "-c:v", "libx264", "-preset", "medium", "-crf", "23",
-            "-c:a", "aac", "-b:a", "128k", "-shortest",
-            out_path,
-        ]
-    else:
-        cmd += [
-            "-filter_complex", fc,
-            "-map", "[vout]", "-map", f"{n_audio}:a",
-            "-c:v", "libx264", "-preset", "medium", "-crf", "23",
-            "-pix_fmt", "yuv420p", "-profile:v", "high", "-level", "4.0",
-            "-movflags", "+faststart",
-            "-c:a", "aac", "-b:a", "128k", "-ar", "44100",
-            "-shortest",
-            out_path,
-        ]
+    # 08-21 정리: BGM은 이미 사이드체인으로 mixed_mp3에 합쳐짐 → 오디오 map 1개만
+    cmd += [
+        "-filter_complex", fc,
+        "-map", "[vout]", "-map", f"{n_audio}:a",
+        "-c:v", "libx264", "-preset", "medium", "-crf", "23",
+        "-pix_fmt", "yuv420p", "-profile:v", "high", "-level", "4.0",
+        "-movflags", "+faststart",
+        "-c:a", "aac", "-b:a", "128k", "-ar", "44100",
+        "-shortest",
+        out_path,
+    ]
 
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0:
