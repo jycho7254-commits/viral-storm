@@ -1,78 +1,34 @@
-# 🌩️ Viral Storm — 게임 바이럴 마케팅 자동화
+# Viral Storm — 바이럴 마케팅 자동화
 
-AI 기반 게임 바이럴 마케팅 자동화 플랫폼. 자연스러운 글을 생성하여 다수 플랫폼에 자동 배포.
+게임/제품 바이럴 콘텐츠 자동 생성·발행 시스템 (26,222건 실측 코퍼스 학습)
 
-## 핵심 기능
+## 아키텍처 (08-24 기준)
 
-- **AI 글 생성 엔진**: "AI 냄새"를 제거한 자연스러운 바이럴 글 자동 작성
-- **멀티 플랫폼 배포**: X, YouTube Shorts, 네이버 블로그, DC인사이드, 아카라이브 동시 배포
-- **스케줄러**: 하루 X개, 시간대 분산, 플랫폼 분산 자동 업로드
-- **성과 추적**: 조회수, 반응, 클릭 추적
-
-## 플랫폼별 배포 방식
-
-| 플랫폼 | 방식 | 우회 | 등급 |
-|--------|------|------|------|
-| X (트위터) | API v2 (tweepy) | 불필요 | A |
-| YouTube Shorts | Data API v3 + FFmpeg | 불필요 | A |
-| 네이버 블로그 | OAuth API + Playwright | SEO 페널티 우회 | B |
-| 아카라이브 | Playwright (stealth) | Cloudflare 우회 | C |
-| DC인사이드 | Playwright (stealth) | 캡차 서비스 연동 | C |
-
-## 기술 스택
-
-| 계층 | 기술 |
-|------|------|
-| 프론트엔드 | Next.js + Tailwind |
-| 백엔드 | Python FastAPI |
-| AI 모델 | GLM-5.2 / GPT-4o |
-| 브라우저 자동화 | Playwright + playwright-stealth |
-| DB | SQLite → PostgreSQL |
-| 스케줄러 | APScheduler |
-| 영상 생성 | FFmpeg + MoviePy |
-| 배포 | Docker |
-
-## 게임 입력 조건
-
-```yaml
-게임명: "트릭컬 리바이브"
-장르: "서브컬처 RPG"
-타겟연령대: "20~30대"
-타겟장르: "오타쿠, 서브컬처 팬"
-게임연령등급: "전체이용가"
-플랫폼: "모바일 (iOS/Android)"
-플랫폼지원: "iOS, Android"
-게임소개: "3등신 캐릭터가 등장하는 서브컬처 RPG..."
-핵심특징: "풀더빙, 3등신 볼따구 아트, 한정캐 없음"
-경쟁작: "원신, 붕괴 스타레일, 승리의 여신 니케"
 ```
+src/
+├── engine/
+│   ├── content_generator.py   # AI 글 생성 (플랫폼별 패턴 주입)
+│   ├── shorts_maker.py        # 숏츠 제작 (TTS+BGM사이드체인+ASS자막+Ken Burns)
+│   │                          # 08-24: 자막 drawtext→ASS 전환(잘림 수정), 
+│   │                          #        저해상도 원본 블러배경+contain(왜곡 수정)
+│   ├── wan_fast.py            # WAN 2.1 로컬 영상생성 (그룹오프로딩, 8스텝)
+│   │                          # ⚠️ 한계: 1.3B 모델 — 추상장면 기괴함 해결 안됨
+│   ├── hybrid_shorts.py       # WAN클립+TTS+자막 통합 파이프라인
+│   ├── ai_video.py            # CogVideoX-3 API (Z.AI, $0.2/영상) — 차세대 주력 후보
+│   ├── publish_scheduler.py   # 발행 스케줄러 (APScheduler, 시간대 분산)
+│   ├── product_research.py    # 제품 리서치
+│   └── product_images.py      # 제품 이미지 수집 (네이버)
+├── publishers/                # 플랫폼 발행기 (네이버블로그 등)
+├── api/                       # FastAPI 백엔드 + 웹 대시보드 (8100)
+└── learning/                  # 코퍼스 수집·분석 (DC/유튜브/블로그/마케팅영상 1,023)
 
-## 빠른 시작
+## 품질 학습 시스템 (08-24 신설)
+- docs/AI영상_품질학습_0824.md — 레퍼런스 분석(22.9만조회 AI숏츠) + 프롬프트 전략
+- data/learning/ref_ai_shorts/ — 레퍼런스 영상 보관
+- 핵심 발견: 성공 AI숏츠 = "환상적 ASMR 제품시연" 콘셉트. WAN 1.3B로는 미달 → CogVideoX-3 전환 검토
 
-```bash
-# 설치
-pip install -r requirements.txt
-
-# 백엔드 실행
-python src/api/main.py
-# 또는
-uvicorn src.api.main:app --reload --port 8000
-
-# 웹 대시보드
-# src/web/index.html을 브라우저로 열기 (API: localhost:8000)
+## 상태
+- 글: 11종 생성 (발행1/대기8) — 마크다운 정화 완료
+- 영상: 제품 레이아웃 버그 2종 수정 완료 (08-24)
+- 크론: 데일리보고 10시 / 코퍼스갱신 월 4시 / GMI점검 9시
 ```
-
-## 역할 분담
-
-| 프로필 | 역할 | 담당 |
-|--------|------|------|
-| **2호** | 개발 총괄 | 엔진, 백엔드, 프론트, 배포 |
-| **3호** | BM/전략 분석 | 타겟 분석, 경쟁작, 마케팅 전략, 페르소나 튜닝 |
-| **OMP** | 품질 검증 | 글 품질, AI 냄새 체크, 발행 전 검증 |
-| **명훈** | 최종 승인 | 캠페인 승인, 계정 관리, 방향 결정 |
-
-상세: [docs/ROLES.md](docs/ROLES.md) | 진행 상황: [TODO.md](TODO.md)
-
-## 라이선스
-
-Private — Internal Use Only
