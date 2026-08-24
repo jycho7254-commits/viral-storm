@@ -102,7 +102,7 @@ def make_bgm(out_mp3: str, dur: float, bpm: int = 90) -> str:
     for i in range(min(n_beats, 200)):
         f = freqs[(i // 4) % 4]
         t0 = i / beat
-        expr.append(f"0.22*sin(2*PI*{f}*t)*exp(-3*(t-{t0:.2f}))*gte(t,{t0:.2f})*lt(t,{t0 + 1.8/beat:.2f})")
+        expr.append(f"0.22*sin(2*PI*{f}*t)*exp(-3*(t-{t0:.2f}))*if(between(t\,{t0:.2f}\,{t0 + 1.8/beat:.2f})\,1\,0)")
     ae = "+".join(expr[:120]) if expr else "0"
     subprocess.run(
         [FFMPEG, "-y", "-f", "lavfi", "-i", f"aevalsrc={ae}:s=44100:d={dur + 1:.1f}",

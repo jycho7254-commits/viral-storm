@@ -1,0 +1,17 @@
+﻿[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Malgun Gothic,62,&H00FFFFFF,&H00000000,&H96000000,-1,5,2,2,60,60,430,1
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.00,0:00:02.40,Cap,{\fad(180,180)}이 신발, AI가 아니면 \N못 담는 화면입니다
+Dialogue: 0,0:00:02.40,0:00:04.64,Cap,{\fad(180,180)}디테일 하나하나 미쳤죠
+Dialogue: 0,0:00:04.64,0:00:06.89,Cap,{\fad(180,180)}이 가격에 이 퀄리티가 진\N짜 되나 싶었어요
+Dialogue: 0,0:00:06.89,0:00:09.13,Cap,{\fad(180,180)}착용감은 말할 것도 없고요
+Dialogue: 0,0:00:09.13,0:00:11.38,Cap,{\fad(180,180)}지금 놓치면 다시 없을 가\N격
