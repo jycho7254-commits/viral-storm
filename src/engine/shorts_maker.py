@@ -210,34 +210,52 @@ def build_short(title, script_lines, image_paths, out_path, voice="female", bgm_
         xfade_parts.append(f"[{prev}][v{i}]xfade=transition=fade:duration=0.3:offset={max(offset - 0.3, 0):.2f}[{out_v}]")
         prev = out_v
 
-    # 4. 자막 — 문장별 시간 배분 (drawtext)
-    caption_filters = []
+    # 4. 자막 — ASS 자막 파일 방식 (08-24: drawtext 체인이 ffmpeg9 빌드에서 파싱 깨짐 → 표준 방식 전환)
+    #    자동 줄바꿈(14자/줄, 화면폭 960px 내) + fad 200ms + 하단 중앙 정렬
+    def _ass_time(x):
+        h = int(x // 3600); m = int((x % 3600) // 60); sec = x % 60
+        return f"{h}:{m:02d}:{sec:05.2f}"
+
+    ass_path = tmp / "subs.ass"
+    ass_lines = [
+        "[Script Info]",
+        "ScriptType: v4.00+",
+        "PlayResX: 1080",
+        "PlayResY: 1920",
+        "WrapStyle: 2",
+        "",
+        "[V4+ Styles]",
+        "Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
+        "Style: Cap,Malgun Gothic,62,&H00FFFFFF,&H00000000,&H96000000,-1,5,2,2,60,60,430,1",
+        "",
+        "[Events]",
+        "Format: Layer, Start, End, Style, Text",
+    ]
     t = 0.0
     for i, line in enumerate(script_lines[:n_seg]):
         cap = sanitize_caption(line)
         if not cap:
             continue
-        # 30자씩 분할 (한 줄에 다 안 들어가면 2줄)
-        chunks = [cap[j:j+24] for j in range(0, len(cap), 24)]
-        for k, chunk in enumerate(chunks[:2]):
-            start = t + 0.1
-            end = t + seg_dur - 0.1
-            if end <= start:
-                continue
-            y = 1350 + k * 90
-            caption_filters.append(
-                f"drawtext=fontfile='{F}/malgun.ttf':text='{esc(chunk)}':"
-                f"fontcolor=white:fontsize=64:borderw=4:bordercolor=black:"
-                f"alpha='if(lt(t\\,{start:.2f})\\,0\\,if(lt(t\\,{start + 0.3:.2f})\\,(t-{start:.2f})/0.3\\,if(lt(t\\,{end - 0.3:.2f})\\,1\\,({end:.2f}-t)/0.3)))':"
-                f"x=(w-text_w)/2:y={y}:enable='between(t\\,{start:.2f}\\,{end:.2f})'"
-            )
+        # 14자씩 줄바꿈 (62px 폰트 × 14자 ≈ 870px < 960px 안전폭)
+        cpl = 14
+        chunks = [cap[j:j + cpl] for j in range(0, len(cap), cpl)]
+        text = "\\N".join(chunks[:3])  # 최대 3줄
+        start_t = t + 0.05
+        end_t = t + seg_dur - 0.05
+        if end_t <= start_t:
+            continue
+        ass_lines.append(
+            f"Dialogue: 0,{_ass_time(start_t)},{_ass_time(end_t)},Cap,{{\\fad(200,200)}}{text}"
+        )
         t += seg_dur
+
+    ass_path.write_text("\n".join(ass_lines) + "\n", encoding="utf-8-sig")
+    caption_sub = f"subtitles='{ass_path.as_posix()}'"
 
     # 최종 필터체인
     chain = ";".join(parts + xfade_parts)
     last_v = prev if xfade_parts else "v0"
-    post = ",".join(caption_filters) if caption_filters else "null"
-    fc = f"{chain};[{last_v}]{post}[vout]"
+    fc = f"{chain};[{last_v}]{caption_sub}[vout]"
 
     cmd = [FFMPEG, "-y"] + inputs
     n_audio = n_seg  # 오디오 인덱스 (이미지 다음)

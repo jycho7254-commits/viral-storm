@@ -1,0 +1,15 @@
+﻿[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Malgun Gothic,62,&H00FFFFFF,&H00000000,&H96000000,-1,5,2,2,60,60,430,1
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.05,0:00:02.13,Cap,{\fad(200,200)}이 신발 진짜 편하고 스타\N일도 좋아서 추천
+Dialogue: 0,0:00:02.23,0:00:04.30,Cap,{\fad(200,200)}가격도 착하고 퀄리티 좋음
+Dialogue: 0,0:00:04.40,0:00:06.48,Cap,{\fad(200,200)}지금 사는게 이득
