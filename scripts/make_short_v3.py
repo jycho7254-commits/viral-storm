@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, ".")
 from src.engine.shorts_maker import tts, sanitize_caption, make_bgm, FFMPEG, esc, F as FONT_DIR
+from src.engine.pro_audio import beat_sync_points  # 08-25: 비트싱크 컷 (Git 리서치 기법)
 
 BASE = Path(__file__).resolve().parents[1]
 OUT = BASE / "data" / "shorts_out" / "product_v3_hybrid.mp4"
@@ -54,9 +55,19 @@ def main():
     dur = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
     print(f"나레이션 {dur:.1f}초")
 
-    # 2. 세그먼트 배분: WAN 1클립(2.4s) + 실사 4컷
+    # 2. 세그먼트 배분: WAN 1클립(2.4s) + 실사 4컷 — 08-25: 컷 시점을 BGM 비트에 동기화
     wan_dur = 2.4
-    seg2 = (dur - wan_dur) / 4
+    beats = beat_sync_points(bgm_path=str(TMP / "bgm.mp3"), n_cuts=4) if (TMP / "bgm.mp3").exists() else None
+    if beats:
+        # 비트 시점을 남은 구간(2.4s~dur)에 맞게 스케일
+        usable = [b for b in beats if b > wan_dur + 0.3]
+        if len(usable) >= 3:
+            cuts = [wan_dur] + usable[:4]
+            if cuts[-1] < dur - 0.3:
+                cuts.append(dur)
+            seg_bounds = cuts[:5]
+            print(f"비트싱크 컷: {['%.2f' % c for c in seg_bounds]}")
+    seg2 = (dur - wan_dur) / 4  # 폴백: 균등 분할
     print(f"WAN 훅 {wan_dur}s + 실사 4컷 x {seg2:.1f}s")
 
     # 3. ASS 자막 (14자 줄바꿈 + fad)
