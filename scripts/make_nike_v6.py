@@ -90,8 +90,11 @@ def main():
         '[Script Info]', 'ScriptType: v4.00+', 'PlayResX: 1080', 'PlayResY: 1920', 'WrapStyle: 2', '',
         '[V4+ Styles]',
         'Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding',
-        'Style: Cap,Malgun Gothic,60,&H00FFFFFF,&H000000FF,&H00101010,&H96000000,-1,0,6,3,2,60,60,430,1',
-        'Style: CapHi,Malgun Gothic,64,&H0020E8FF,&H000000FF,&H00101010,&H96000000,-1,0,7,3,2,60,60,420,1',  # 노랑 강조
+        # 폰트 팔레트 (08-25): 훅/CTA=BlackHanSans(임팩트), 본론=NotoSansKR, 팝=Jua
+        # libass 폰트명은 폰트 내부명 사용 — 파일은 assets/fonts에 두고 FontDir 지정
+        'Style: Cap,Noto Sans KR,60,&H00FFFFFF,&H000000FF,&H00101010,&H96000000,-1,0,6,3,2,60,60,430,1',
+        'Style: CapHi,Black Han Sans,66,&H0020E8FF,&H000000FF,&H00101010,&H96000000,0,0,7,4,2,60,60,420,1',  # 훅/CTA 임팩트체+노랑
+        'Style: CapPop,Jua,62,&H00FFFFFF,&H000000FF,&H00101010,&H96000000,0,0,6,3,2,60,60,425,1',  # 포인트 부드러운체
         '', '[Events]', 'Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text',
     ]
     t = 0.0
@@ -99,7 +102,7 @@ def main():
     for (line, _, _, emo), b in zip(SCRIPT, bounds):
         cap = sanitize_caption(line)
         text = wrap_breath(cap)
-        style = 'CapHi' if emo in ('hook', 'cta', 'pop') else 'Cap'
+        style = {'hook': 'CapHi', 'cta': 'CapHi', 'pop': 'CapPop'}.get(emo, 'Cap')
         # 등장 효과: 훅/CTA는 커지면서 팝
         fx = '{\fad(150,150)\t(0,200,\fscx108\fscy108)\t(200,350,\fscx100\fscy100)}' if style == 'CapHi' else '{\fad(150,150)}'
         ass_lines.append(f'Dialogue: 0,{ass_time(t)},{ass_time(t+b)},{style},,0,0,0,,{fx}{text}')
@@ -142,7 +145,8 @@ def main():
     # subtitles 필터 인자 이스케이프: 콜론은 필터 옵션 구분자라 \: 필요 (단일 backslash)
     esc_colon = chr(92) + ':'
     subs_esc = subs.replace(':', esc_colon)
-    fc_txt = ''.join(fc) + chain.rstrip(';') + f";[{prev}]subtitles=filename='{subs_esc}'[vout]"
+    fonts_dir = str(BASE / 'assets' / 'fonts').replace(chr(92), '/').replace(':', esc_colon)
+    fc_txt = ''.join(fc) + chain.rstrip(';') + f";[{prev}]subtitles=filename='{subs_esc}':fontsdir='{fonts_dir}'[vout]"
 
     cmd = [FFMPEG, '-y'] + inputs + [
         '-filter_complex', fc_txt, '-map', '[vout]', '-map', f'{nA}:a',
