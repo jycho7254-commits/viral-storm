@@ -88,6 +88,14 @@ def probe_duration(f: str) -> float:
     return float(r.stdout.strip())
 
 
+CC_BGM_SOURCES = {
+    # public-apis/Freesound 리서치(08-25) — Freesound은 API키 필요(형 가입 대기),
+    # incompetech(Kevin MacLeod)는 CC-BY 직접 다운로드 가능 (실측 200 OK)
+    "loping_sting": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Loping%20Sting.mp3",
+    # TODO: Freesound API키 발급받으면 lofi/uptempo 검색 자동화 추가
+}
+
+
 def make_bgm(out_mp3: str, dur: float, bpm: int = 90) -> str:
     """로컬 합성 미니멀 로파이 BGM — 저작권/외부의존성 0
     느린 4분음표 파드 + 약한 킥. 나레이션 뒤 -24dB로 깔림."""
