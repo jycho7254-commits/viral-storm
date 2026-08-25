@@ -1,0 +1,5 @@
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_v6\voice_0.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_v6\voice_1.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_v6\voice_2.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_v6\voice_3.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_v6\voice_4.mp3'
