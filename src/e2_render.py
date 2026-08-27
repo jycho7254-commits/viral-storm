@@ -38,7 +38,12 @@ def wrap_breath(text, cpl=13):
 def pick_stills(resource_dir: str, category: str, n: int = 6) -> list:
     """리소스 우선순위: 형 전달 폴더 > 카테고리 기본 에셋"""
     rd = Path(resource_dir) if resource_dir else None
+    if rd and not rd.is_absolute():
+        rd = BASE / rd  # 상대경로는 프로젝트 루트 기준 (08-27)
     if rd and rd.exists():
+        clips = sorted([p for p in rd.iterdir() if p.suffix.lower() == '.mp4'])
+        if clips:
+            return [str(p) for p in clips[:n]]  # 행동 클립 우선 (100개 학습)
         imgs = sorted([p for p in rd.iterdir() if p.suffix.lower() in ('.png', '.jpg', '.jpeg', '.webp')])
         if imgs:
             return [str(p) for p in imgs[:n]]
@@ -139,7 +144,10 @@ def render(job_id: str, product: str, category: str,
 
     # 6. 조립 — 줌펀치+채도+트랜지션 다양화
     for p in stills:
-        inputs += ["-loop", "1", "-framerate", "30", "-t", f"{seg2 + 0.2:.2f}", "-i", p]
+        if str(p).lower().endswith('.mp4'):
+            inputs += ["-i", str(p)]  # 영상 클립 — loop 없이 원본
+        else:
+            inputs += ["-loop", "1", "-framerate", "30", "-t", f"{seg2 + 0.2:.2f}", "-i", str(p)]
     inputs += ["-i", str(mixed)]
     nA = (1 if use_wan else 0) + n_stills
     audio_idx = nA
@@ -149,13 +157,23 @@ def render(job_id: str, product: str, category: str,
         fc.append("[0:v]settb=1/15360[v0];")
     for i in range(1 if use_wan else 0, nA):
         src = i
-        fc.append(
-            f"[{src}:v]split=2[sA{src}][sB{src}];"
-            f"[sA{src}]scale=2160:3840:force_original_aspect_ratio=increase:flags=lanczos,crop=2160:3840,gblur=sigma=45,eq=saturation=1.1[bg{src}];"
-            f"[sB{src}]scale=2160:3840:force_original_aspect_ratio=decrease:flags=lanczos[fg{src}];"
-            f"[bg{src}][fg{src}]overlay=(W-w)/2:(H-h)/2,"
-            f"zoompan=z='if(eq(on\\,0)\\,1.06\\,min(zoom+0.0008\\,1.10))':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={int(seg2 * 30) + 30}:s=1080x1920:fps=30,setsar=1,settb=1/15360[v{src}];"
-        )
+        sidx = src - (1 if use_wan else 0)
+        is_clip = sidx < len(stills) and str(stills[sidx]).lower().endswith('.mp4')
+        if is_clip:
+            # 영상 클립: 세로 크롭+스케일 + 부족 길이는 마지막 프레임 정지 (tpad)
+            fc.append(
+                f"[{src}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30,eq=saturation=1.1,"
+                f"tpad=stop_mode=clone:stop_duration={max(seg2 - 3.5, 0):.1f},"
+                f"trim=0:{seg2:.2f},setpts=PTS-STARTPTS,settb=1/15360[v{src}];"
+            )
+        else:
+            fc.append(
+                f"[{src}:v]split=2[sA{src}][sB{src}];"
+                f"[sA{src}]scale=2160:3840:force_original_aspect_ratio=increase:flags=lanczos,crop=2160:3840,gblur=sigma=45,eq=saturation=1.1[bg{src}];"
+                f"[sB{src}]scale=2160:3840:force_original_aspect_ratio=decrease:flags=lanczos[fg{src}];"
+                f"[bg{src}][fg{src}]overlay=(W-w)/2:(H-h)/2,"
+                f"zoompan=z='if(eq(on\,0)\,1.06\,min(zoom+0.0008\,1.10))':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={int(seg2 * 30) + 30}:s=1080x1920:fps=30,setsar=1,settb=1/15360[v{src}];"
+            )
     trans = ["fade", "smoothup", "circleopen", "fade", "slideleft"]
     chain = ""
     labels = (["v0"] if use_wan else []) + [f"v{src}" for src in range(1 if use_wan else 0, nA)]
@@ -174,7 +192,7 @@ def render(job_id: str, product: str, category: str,
     cmd = [FFMPEG, "-y"] + inputs + [
         "-filter_complex", fc_txt, "-map", "[vout]", "-map", f"{audio_idx}:a",
         "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-pix_fmt", "yuv420p", "-r", "30",
-        "-c:a", "aac", "-b:a", "160k", "-shortest", str(OUT)]
+        "-c:a", "aac", "-b:a", "160k", str(OUT)]
     rr = subprocess.run(cmd, capture_output=True, text=True)
     if rr.returncode != 0:
         raise RuntimeError(f"ffmpeg 실패: {rr.stderr[-400:]}")
