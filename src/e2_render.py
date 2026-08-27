@@ -91,13 +91,18 @@ def render(job_id: str, product: str, category: str,
 
     # 2. BGM + 비트싱크
     bgm = make_bgm(str(TMP / "bgm.mp3"), dur)
-    stills = pick_stills(resource_dir, category, n=min(len(script) - 1, 6))
+    stills = pick_stills(resource_dir, category, n=min(len(script) - 1, 10))
     n_stills = len(stills)
     wan_clip = BASE / "data/shorts_out/wan_v4_shoe_macro.mp4"
     # 08-27: WAN 832x480 업스케일 화질 저하 (비전검수 지적) — 기본 OFF, 명시 시만 사용
     use_wan = False
     wan_dur = 2.4 if use_wan else 0.0
-    seg2 = (dur - wan_dur) / max(n_stills, 1)
+    # 08-27 끊김 해결: 클립 리소스는 세그길이를 클립 재생길이(3.1s)에 맞춤 — tpad 정지 제거
+    is_clip_res = any(str(x).lower().endswith('.mp4') for x in stills)
+    if is_clip_res:
+        seg2 = min(dur / n_stills, 3.1)  # 클립 실제 길이 이하로
+    else:
+        seg2 = (dur - wan_dur) / max(n_stills, 1)
 
     # 3. WAN 훅 전처리
     inputs = []
@@ -160,10 +165,9 @@ def render(job_id: str, product: str, category: str,
         sidx = src - (1 if use_wan else 0)
         is_clip = sidx < len(stills) and str(stills[sidx]).lower().endswith('.mp4')
         if is_clip:
-            # 영상 클립: 세로 크롭+스케일 + 부족 길이는 마지막 프레임 정지 (tpad)
+            # 영상 클립: 세로 크롭+스케일 — 정지(tpad) 없이 trim만 (08-27 끊김 근본해결)
             fc.append(
                 f"[{src}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30,eq=saturation=1.1,"
-                f"tpad=stop_mode=clone:stop_duration={max(seg2 - 3.5, 0):.1f},"
                 f"trim=0:{seg2:.2f},setpts=PTS-STARTPTS,settb=1/15360[v{src}];"
             )
         else:

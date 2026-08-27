@@ -1,0 +1,3 @@
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_wannew30\tts_parts\part_0.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_wannew30\tts_parts\part_1.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_wannew30\tts_parts\part_2.mp3'
