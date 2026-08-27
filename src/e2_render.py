@@ -72,7 +72,7 @@ def render(job_id: str, product: str, category: str,
     for i, seg in enumerate(script):
         f = TMP / f"voice_{i}.mp3"
         tts(seg["text"], str(f), voice="female",
-            rate=seg.get("rate", "+4%"), pitch=seg.get("pitch", "+0Hz"))
+            rate=seg.get("rate", "+8%"), pitch=seg.get("pitch", "+8Hz"))
         parts.append(str(f))
     concat = TMP / "list.txt"
     concat.write_text("\n".join(f"file '{p}'" for p in parts), encoding="utf-8")
@@ -108,9 +108,10 @@ def render(job_id: str, product: str, category: str,
         "[Script Info]", "ScriptType: v4.00+", "PlayResX: 1080", "PlayResY: 1920", "WrapStyle: 2", "",
         "[V4+ Styles]",
         "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
-        "Style: Cap,Noto Sans KR,60,&H00FFFFFF,&H000000FF,&H00101010,&H96000000,-1,0,6,3,2,60,60,430,1",
+        # 08-27 형 피드백: 첫 폰트(BlackHanSans+노랑) 스타일로 전체 통일 — 크기만 역할별
+        "Style: Cap,Black Han Sans,56,&H0020E8FF,&H000000FF,&H00101010,&H96000000,0,0,7,4,2,60,60,430,1",
         "Style: CapHi,Black Han Sans,66,&H0020E8FF,&H000000FF,&H00101010,&H96000000,0,0,7,4,2,60,60,420,1",
-        "Style: CapPop,Jua,62,&H00FFFFFF,&H000000FF,&H00101010,&H96000000,0,0,6,3,2,60,60,425,1",
+        "Style: CapPop,Black Han Sans,60,&H0020E8FF,&H000000FF,&H00101010,&H96000000,0,0,7,4,2,60,60,425,1",
         "", "[Events]", "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
     ]
     t = 0.0

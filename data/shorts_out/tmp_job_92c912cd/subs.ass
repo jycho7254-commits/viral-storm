@@ -1,0 +1,20 @@
+﻿[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Black Han Sans,56,&H0020E8FF,&H000000FF,&H00101010,&H96000000,0,0,7,4,2,60,60,430,1
+Style: CapHi,Black Han Sans,66,&H0020E8FF,&H000000FF,&H00101010,&H96000000,0,0,7,4,2,60,60,420,1
+Style: CapPop,Black Han Sans,60,&H0020E8FF,&H000000FF,&H00101010,&H96000000,0,0,7,4,2,60,60,425,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:06.24,CapHi,,0,0,0,,{\fad(150,150)\t(0,200,\fscx108\fscy108)\t(200,350,\fscx100\fscy100)}나이키 에어포스 신는 사람 5가지 실수\N알고 계셨나요?
+Dialogue: 0,0:00:06.24,0:00:12.49,Cap,,0,0,0,,{\fad(150,150)}첫 번째\N바지단이 길어서 신발이 안 보여요
+Dialogue: 0,0:00:12.49,0:00:18.73,Cap,,0,0,0,,{\fad(150,150)}두 번째\N색이 너무 많아서 포인트가 사라져요
+Dialogue: 0,0:00:18.73,0:00:24.97,CapPop,,0,0,0,,{\fad(150,150)}세 번째! 양말로 다 망\N칩니다
+Dialogue: 0,0:00:24.97,0:00:31.22,Cap,,0,0,0,,{\fad(150,150)}네 번째\N제일 흔한 화이트 on 화이트는 이제 지겨죠
+Dialogue: 0,0:00:31.22,0:00:37.46,Cap,,0,0,0,,{\fad(150,150)}다섯 번째\N사이즈 잘못 골라서 뒷꿈치가 다 까져요
