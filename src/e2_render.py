@@ -165,9 +165,10 @@ def render(job_id: str, product: str, category: str,
         sidx = src - (1 if use_wan else 0)
         is_clip = sidx < len(stills) and str(stills[sidx]).lower().endswith('.mp4')
         if is_clip:
-            # 영상 클립: 세로 크롭+스케일 — 정지(tpad) 없이 trim만 (08-27 끊김 근본해결)
+            # 영상 클립: 16fps WAN → 30fps 보간(minterpolate)으로 끊김 제거 (08-27)
             fc.append(
-                f"[{src}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30,eq=saturation=1.1,"
+                f"[{src}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
+                f"minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:vsbmc=1,eq=saturation=1.1,"
                 f"trim=0:{seg2:.2f},setpts=PTS-STARTPTS,settb=1/15360[v{src}];"
             )
         else:
