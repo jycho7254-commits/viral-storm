@@ -88,19 +88,21 @@ def e1_write(job) -> dict:
 def e2_render(job, script_data: dict) -> str:
     """실제 렌더는 scripts/make_short_v3 계열 재사용 — 여기선 잡 파이프라인만.
     WAN이 오래 걸리므로 이 단계가 GPU 독점 구간."""
-    import subprocess
-    out_dir = BASE / "data" / "shorts_out"
-    out_dir.mkdir(exist_ok=True)
-    out = out_dir / f"job_{job['job_id'][:8]}.mp4"
-    # 프록시: v6/v7 엔진 호출 (제품 이미지는 resource_dir에서)
-    # TODO: E2 본체 모듈화 — 지금은 렌더 완료로 가정하고 경로만 반환 (점진적 전환)
-    return str(out)
+    from src.e2_render import render as _render
+    return _render(
+        job_id=job["job_id"],
+        product=job["product"],
+        category=job["category"] or "product",
+        script=script_data["script"],
+        resource_dir=job["resource_dir"] or "",
+    )
 
 
 # ── E3 검수관 ─────────────────────────────────────
 def e3_review(job, video_path: str) -> dict:
-    """프레임 3개 이물질/자막 검수 — 트릭컬 사고 방지 게이트"""
-    return {"passed": False, "reason": "E3 자동검수 미구현 — 수동 승인 필요"}
+    """프레임/오디오/길이 자동검수 — 트릭컬 사고 방지 게이트"""
+    from src.e3_review import review as _review
+    return _review(video_path, job["category"] or "fashion")
 
 
 # ── 실행기 ────────────────────────────────────────

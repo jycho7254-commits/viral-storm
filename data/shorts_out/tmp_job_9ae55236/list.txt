@@ -1,0 +1,7 @@
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_9ae55236\voice_0.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_9ae55236\voice_1.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_9ae55236\voice_2.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_9ae55236\voice_3.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_9ae55236\voice_4.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_9ae55236\voice_5.mp3'
+file 'C:\Users\user\Desktop\viral-storm\data\shorts_out\tmp_job_9ae55236\voice_6.mp3'
