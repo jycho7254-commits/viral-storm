@@ -98,7 +98,8 @@ def make_hybrid_short(
         pass
 
     # 5. 클립 연결 + 세로 포맷 + 자막
-    seg_dur = adur / n
+    # 한국 바이럴 스타일 (09-04 형 레퍼런스 분석): 컷당 1.5~2.5초 빠른 리듬
+    seg_dur = min(adur / n, 2.5)
     inputs = []
     for i in range(n):
         c = clips[i % len(clips)]
