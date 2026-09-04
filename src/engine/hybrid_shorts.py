@@ -14,7 +14,7 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(BASE))
 
-FFMPEG = r"C:\Users\user\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0-full_build\bin\ffmpeg.exe"
+FFMPEG = r"C:\Users\user\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffmpeg.exe"
 FFPROBE = FFMPEG.replace("ffmpeg.exe", "ffprobe.exe")
 OUT_DIR = BASE / "data" / "shorts_out"
 OUT_DIR.mkdir(parents=True, exist_ok=True)

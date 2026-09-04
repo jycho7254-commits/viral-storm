@@ -137,7 +137,7 @@ def run_shorts(items):
             tmp = BASE / "data" / "shorts_bg"
             tmp.mkdir(exist_ok=True)
             bg = tmp / "bg.png"
-            FF = r"C:\Users\user\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0-full_build\bin\ffmpeg.exe"
+            FF = r"C:\Users\user\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin\ffmpeg.exe"
             sp.run([FF, "-y", "-f", "lavfi", "-i", "color=c=0x16213e:s=1080x1920:d=1", str(bg)], capture_output=True)
             imgs = [str(bg)]
         out = BASE / "data" / "shorts_out" / f"short_{it['id']}_{datetime.now():%m%d_%H%M}.mp4"

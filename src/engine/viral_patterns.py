@@ -76,12 +76,32 @@ def get_anti_patterns() -> str:
     return "\n".join(f"- {a}" for a in dict.fromkeys(aps) if a)[:1200]
 
 
+def _load_kr_patterns():
+    """한국 바이럴 실측 패턴 (2026-09-04, 유튜브 101영상 분석)"""
+    import json, os
+    pp = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'data', 'learning', 'kr_viral_patterns.json')
+    if not os.path.exists(pp):
+        return None
+    try:
+        kp = json.load(open(pp, encoding='utf-8'))['핵심패턴']
+        NL = chr(10)
+        return ("【한국 바이럴 실측 공식 (유튜브 101영상 분석)】" + NL
+                + "- 훅 3종: " + " / ".join(kp['한국_훅_3종']) + NL
+                + "- 제품류 공식: " + " / ".join(kp['제품류_공식']) + NL
+                + "- 고조회(500만+) 공통: " + " / ".join(kp['고조회_공통']))
+    except Exception:
+        return None
+
+
 def apply_patterns(platform: str, category: str = "game") -> str:
     """플랫폼별 프롬프트 힌트 조합"""
     parts = []
     if platform in ("youtube", "shorts"):
         parts.append("【유튜브 제목 공식 (실측 데이터 기반)】\n" + get_yt_formula(category))
         parts.append("【훅 워드】" + ", ".join(get_hook_words()))
+        _kr = _load_kr_patterns()
+        if _kr:
+            parts.append(_kr)
     elif platform in ("dc", "arca", "community"):
         parts.append("【커뮤니티 규칙 (DC 9,428건 학습)】\n" + get_community_rules())
     elif platform in ("blog", "naver"):
