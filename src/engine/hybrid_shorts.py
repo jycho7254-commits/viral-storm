@@ -46,9 +46,9 @@ def make_hybrid_short(
     # 1. 씬 프롬프트 구성 (기본 템플릿 + 문장 수만큼)
     if not scene_prompts:
         templates = {
-            "fashion": ["worn by invisible mannequin rotating slowly, bright studio, fabric texture detail",
-                        "close-up on fabric details, soft lighting, premium feel",
-                        "styled outfit showcase, dynamic camera orbit"],
+            "fashion": ["person wearing sneakers walking toward camera, low angle 3/4 view, feet fill the frame, natural daylight, real-life street",
+                        "extreme close-up on laces being tied by hands, top-down view, shallow depth of field",
+                        "person's feet in sneakers stepping confidently, tracking shot at ground level, cinematic motion"],
             "game": ["colorful game characters celebrating with particle effects, vibrant fantasy world",
                      "epic battle scene with magic effects, dynamic camera",
                      "cute characters dancing together in colorful garden"],
