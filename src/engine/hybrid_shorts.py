@@ -150,6 +150,27 @@ def make_hybrid_short(
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0:
         raise RuntimeError(f"렌더 실패: {r.stderr[-400:]}")
+    # ── 품질 후처리 (v5-enhance, 2026-09-02) — 노이즈제거+컬러그레이딩+샤프닝+비네트 ──
+    # 검증: 3/10 → 7/10 (E3 비전검수). crf 22→16으로 인코딩 품질도 상향.
+    try:
+        enh = out_path.replace(".mp4", "_enh.mp4")
+        vf = ("hqdn3d=1.5:1.5:6:6,"
+              "eq=contrast=1.08:brightness=0.015:saturation=1.12,"
+              "unsharp=5:5:0.9:5:5:0.0,"
+              "vignette=PI/7")
+        rc = subprocess.run(
+            [FFMPEG, "-y", "-i", out_path, "-vf", vf,
+             "-c:v", "libx264", "-preset", "slow", "-crf", "16", "-pix_fmt", "yuv420p",
+             "-c:a", "copy", enh],
+            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900)
+        if rc.returncode == 0:
+            import os as _os
+            _os.replace(enh, out_path)  # 원본 교체 — 이후 파이프라인은 향상본 사용
+            print("[품질] 후처리 적용 완료 (hqdn3d+grade+sharpen+vignette, crf16)")
+        else:
+            print(f"[품질] 후처리 스킵 (ffmpeg 오류, 원본 유지): {rc.stderr[-120:]}")
+    except Exception as e:
+        print(f"[품질] 후처리 스킵: {e}")
     d = probe_dur(out_path)
     print(f"[하이브리드] 완성: {out_path} ({d:.1f}초, 총 {time.time()-t0:.0f}초 소요)")
     return out_path
