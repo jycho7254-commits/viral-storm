@@ -98,8 +98,8 @@ def make_hybrid_short(
         pass
 
     # 5. 클립 연결 + 세로 포맷 + 자막
-    # 한국 바이럴 스타일 (09-04 형 레퍼런스 분석): 컷당 1.5~2.5초 빠른 리듬
-    seg_dur = min(adur / n, 2.5)
+    # 컷 리듬 (09-06 종합 재분석): 상위 쇼츠는 46-60초 완주형 — 2.5초 캡은 과함. 3~6초 유연 적용
+    seg_dur = max(3.0, min(adur / n, 6.0))
     inputs = []
     for i in range(n):
         c = clips[i % len(clips)]

@@ -77,20 +77,30 @@ def get_anti_patterns() -> str:
 
 
 def _load_kr_patterns():
-    """한국 바이럴 실측 패턴 (2026-09-04, 유튜브 101영상 분석)"""
+    """종합 패턴 (2026-09-06 마스터 v2 — 40,261건 재분석) + 한국 바이럴 101영상"""
     import json, os
-    pp = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'data', 'learning', 'kr_viral_patterns.json')
-    if not os.path.exists(pp):
-        return None
+    base = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'data', 'learning')
+    NL = chr(10)
+    parts = []
     try:
-        kp = json.load(open(pp, encoding='utf-8'))['핵심패턴']
-        NL = chr(10)
-        return ("【한국 바이럴 실측 공식 (유튜브 101영상 분석)】" + NL
-                + "- 훅 3종: " + " / ".join(kp['한국_훅_3종']) + NL
-                + "- 제품류 공식: " + " / ".join(kp['제품류_공식']) + NL
-                + "- 고조회(500만+) 공통: " + " / ".join(kp['고조회_공통']))
+        mp = json.load(open(os.path.join(base, 'master_patterns_v2.json'), encoding='utf-8'))
+        sc = mp.get('숏츠_공식', {})
+        parts.append("【마스터 패턴 v2 — 40,261건 종합 재분석 (2026-09-06)】" + NL
+                     + "- 길이: " + str(sc.get('길이', {}).get('최적', '')) + NL
+                     + "- 제목: 평균 39자, 괄호 태그 사용(상위 56% vs 하위 25%)" + NL
+                     + "- 훅 순위: " + ', '.join(str(x) for x in sc.get('제목', {}).get('훅_순위', [])[:4]) + NL
+                     + "- 상위 유형: " + ', '.join(str(x) for x in mp.get('숏츠_공식', {}).get('상위_쇼츠_유형', [])[:3]) + NL
+                     + "- 금지: " + ', '.join(mp.get('anti_patterns', [])[:3]))
     except Exception:
-        return None
+        pass
+    try:
+        kp = json.load(open(os.path.join(base, 'kr_viral_patterns.json'), encoding='utf-8'))['핵심패턴']
+        parts.append("【한국 바이럴 실측 (101영상)】" + NL
+                     + "- 훅 3종: " + " / ".join(kp['한국_훅_3종']) + NL
+                     + "- 제품류 공식: " + " / ".join(kp['제품류_공식']))
+    except Exception:
+        pass
+    return NL.join(parts) if parts else None
 
 
 def apply_patterns(platform: str, category: str = "game") -> str:
