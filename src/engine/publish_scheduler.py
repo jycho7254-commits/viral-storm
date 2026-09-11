@@ -18,6 +18,10 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[2]
 DB = BASE / "data" / "viral_storm.db"
+import json as _json
+_pp = BASE / "config" / "proxy_pool.json"
+PROXIES = _json.loads(_pp.read_text()) if _pp.exists() else []
+PROXY = PROXIES[0] if PROXIES else None
 
 # 플랫폼별 발행 시간 (시, 분)
 SCHEDULE = {
@@ -48,7 +52,15 @@ def publish_blog(content_id: int, text: str) -> tuple:
 
 def publish_dc(content_id: int, text: str) -> tuple:
     """DC 발행 — 프록시 필요 (준비 전이면 스킵으로 표시)"""
-    return ("skipped", "DC 프록시 미설정 — Oracle Cloud 준비 후 활성화")
+    # Webshare 프록시 활성화 (09-11)
+    try:
+        from src.publishers.dc_gall import publish as dc_publish
+        url = dc_publish(text, proxy=PROXY)
+        return ("posted", url)
+    except ImportError:
+        return ("skipped", "dc_gall 발행기 미설치")
+    except Exception as e:
+        return ("failed", str(e)[:80])
 
 
 def publish_twitter(content_id: int, text: str) -> tuple:
